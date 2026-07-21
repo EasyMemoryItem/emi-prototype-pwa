@@ -13,6 +13,30 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="EMI">
+<script>
+// Lock the app-shell height to the *visible* viewport height. iOS/WebKit can
+// resolve 100dvh against the wrong (large) viewport right after a programmatic
+// reload — which is what the PWA update flow does (controllerchange -> reload).
+// That made the absolutely-positioned bottom nav bar drop below the fold until
+// the app was reopened. Driving the height from window.innerHeight and
+// recomputing once the viewport settles keeps it correct on the update reload.
+(function () {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  function setAppHeight() {
+    document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px');
+  }
+  setAppHeight();
+  window.addEventListener('resize', setAppHeight);
+  window.addEventListener('orientationchange', setAppHeight);
+  window.addEventListener('pageshow', setAppHeight);
+  window.addEventListener('load', function () {
+    setAppHeight();
+    // iOS settles the viewport a frame or two late after reload — recompute.
+    requestAnimationFrame(function () { requestAnimationFrame(setAppHeight); });
+    setTimeout(setAppHeight, 300);
+  });
+})();
+</script>
 <!-- Serve the design-compiler's CDN dependencies from local vendor files so the
      app works fully offline. support.js reads these via cdnScriptFor(). -->
 <script>
@@ -41,7 +65,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 /* Full-screen app shell — fills the viewport like a native app instead of the
    simulated device bezel. Centred with a max-width so it looks intentional on
    wide (desktop/tablet) screens; edge-to-edge on phones. */
-.emi-app{width:100vw;height:100vh;height:100dvh;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;background:#EEF1F4}
+.emi-app{width:100vw;height:100vh;height:100dvh;height:var(--app-h,100dvh);overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;background:#EEF1F4}
 .emi-scroll{scrollbar-width:none;padding-bottom:calc(104px + env(safe-area-inset-bottom))!important}.emi-scroll::-webkit-scrollbar{display:none}
 </style>
 </helmet>
