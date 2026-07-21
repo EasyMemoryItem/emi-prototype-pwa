@@ -36,8 +36,20 @@ self.addEventListener('install', (event) => {
   // On a first-ever install there is no active worker to wait behind, so this
   // one activates immediately — offline support still works from launch one.
   event.waitUntil(
-    caches.open(CACHE_VERSION)
-      .then((cache) => cache.addAll(PRECACHE))
+    caches.open(CACHE_VERSION).then((cache) =>
+      // Fetch each asset with cache:'reload' to BYPASS the browser HTTP cache.
+      // GitHub Pages serves these with Cache-Control: max-age=600, so a plain
+      // cache.addAll() could precache a stale index.html for up to 10 minutes
+      // after a deploy — the new worker would activate but still serve old
+      // content. Forcing a network fetch guarantees we precache the freshly
+      // deployed files that match this worker's CACHE_VERSION.
+      Promise.all(PRECACHE.map((url) =>
+        fetch(new Request(url, { cache: 'reload' })).then((res) => {
+          if (res && res.ok) return cache.put(url, res);
+          throw new Error('precache failed: ' + url + ' (' + (res && res.status) + ')');
+        })
+      ))
+    )
   );
 });
 
