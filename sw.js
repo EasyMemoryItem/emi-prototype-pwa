@@ -5,7 +5,7 @@
  * which makes the installed PWA fully offline-capable from the first launch.
  * Bump CACHE_VERSION whenever any precached file changes to force a refresh.
  */
-const CACHE_VERSION = 'emi-v5';
+const CACHE_VERSION = 'emi-v6';
 const PRECACHE = [
   './',
   './index.html',
@@ -23,10 +23,11 @@ const PRECACHE = [
   './vendor/fonts/inter-4.woff2',
   './vendor/fonts/inter-5.woff2',
   './vendor/fonts/inter-6.woff2',
-  './icons/icon.svg',
+  './icons/favicon-32.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
+  './icons/logo.png',
 ];
 
 self.addEventListener('install', (event) => {
