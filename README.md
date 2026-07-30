@@ -17,7 +17,7 @@ nothing is fetched from a CDN. A service worker precaches the whole app shell.
 | `index.html` | **The PWA.** Same markup as the `.dc.html` source + a local `window.__resources` map (points the runtime at `vendor/` instead of unpkg), local font, PWA `<head>` tags, and service-worker registration. Deploy and install this. |
 | `manifest.webmanifest` | Web app manifest — name, icons, colours, `display: standalone`. |
 | `sw.js` | Service worker. Precaches the app shell (listed in `PRECACHE`) and serves cache-first, so the installed app works offline from first launch. |
-| `icons/` | App icons (`favicon-32.png`, `icon-192.png`, `icon-512.png` — `any maskable`; `apple-touch-icon.png`, `logo.png`). Generated from the official EMI brand mark on easymemoryitem.com. |
+| `icons/` | App icons, generated from the official EMI brand mark on easymemoryitem.com. `favicon-32.png`, `icon-192/512.png` and `logo.png` are the mark as-is (rounded square, transparent corners); `icon-maskable-192/512.png` and `apple-touch-icon.png` are full-bleed blue, since Android's adaptive mask and iOS both need opaque squares. |
 | `vendor/` | Local copies of `react` / `react-dom` / `@babel/standalone` (18.3.1 / 7.29.0) and the Inter font (`inter.css` + `fonts/*.woff2`). Makes the app CDN-free and offline-capable. |
 | `EMI Prototype v2.dc.html` | **Editable source.** Claude Design compiler format (`<x-dc>`, `sc-if`/`sc-for`, `{{ }}` bindings) rendered by `support.js`. Edit here, then re-apply changes to `index.html`. |
 | `support.js` | Design-compiler runtime. Parses the markup and renders it; resolves CDN deps through `window.__resources` when present. |
