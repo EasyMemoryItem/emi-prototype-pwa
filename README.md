@@ -1,6 +1,6 @@
 # EMI Prototype v2
 
-Hi-fi interactive prototype for **easy memory item** — "Memory items that stick — and make you better."
+Hi-fi interactive prototype for **Easy Memory Item** — "Memory items that stick — and make you better."
 
 Imported from the Claude Design project *High fidelity prototype design*
 (`EMI Prototype v2.dc.html`).

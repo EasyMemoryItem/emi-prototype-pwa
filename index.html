@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>easy memory item</title>
+<title>Easy Memory Item</title>
 <meta name="description" content="Memory items that stick — and make you better.">
 <meta name="theme-color" content="#0E4EA8">
 <link rel="manifest" href="manifest.webmanifest">
@@ -149,6 +149,9 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   .emi-scroll{padding-left:32px!important;padding-right:32px!important}
   .emi-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px!important;align-content:start}
   .emi-grid-hero>:first-child{grid-column:1/-1}
+  /* One-line cards keep their own height instead of being stretched to the
+     tallest cell in the row — a 240px-tall "Weakest area" card is all padding. */
+  .emi-focus{align-self:start!important}
   /* Single-column screens: cap the whole screen, not just the scroll body, so
      the header and the content keep a shared left edge. */
   [data-screen-label]:has(>.emi-narrow){max-width:772px}
@@ -156,8 +159,11 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   /* HeroUI-flavoured surface pass: softer, higher-radius cards on the big canvas */
   .emi-card{border-radius:20px!important;box-shadow:0 10px 26px -16px rgba(19,26,33,0.22)!important}
   .emi-title{width:auto!important;height:auto!important}
-  /* The rail already shows the active aircraft — drop the per-screen chip. */
-  .emi-acchip{display:none!important}
+  /* The per-screen aircraft chip stays in the header's top-right corner here
+     too, exactly as on phone — the rail no longer carries an aircraft row. */
+  /* The brand mark is dropped from the home header: the rail carries it, so
+     the header's copy would be a second logo on screen. */
+  .emi-hbrand img{display:none!important}
   .emi-searchcard{max-width:600px!important}
 
   /* Checklist master/detail: phase list + limitations card on the left. */
@@ -171,6 +177,63 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   .emi-clmain .emi-scroll{padding-bottom:12px!important}
   .emi-clspacer{height:110px!important}
 }
+
+/* ── iPad Pro landscape: Start is a fixed dashboard, not a scroll ────────────
+   Above this switch there are three columns under a full-width hero, and the
+   whole screen fits the viewport — Start is a glance surface on a big canvas,
+   so the user should never have to scroll to see the leaderboard.
+     col 1  Activity      (spans all three content rows)
+     col 2  Leaderboard   (spans all three content rows)
+     col 3  Currency  +  Weakest area  +  Fleet, stacked
+   Column 3 carries the stack because it holds the three shortest blocks;
+   putting Fleet under Activity instead costs the same height but strands it in
+   a row sized by Activity, which leaves a dead gap above Weakest area.
+
+   1180px is the 13" Air / iPad Pro landscape width (11" is 1194, 13" is 1366),
+   which leaves ~284px per column once the 246px rail and the page padding are
+   out — just enough for a full leaderboard row ("Peter Schmidt · Mannheim"
+   needs ~278). Everything narrower — a 1024pt iPad, an iPad mini, any portrait
+   iPad — keeps the auto-fit grid above and scrolls: three columns there are
+   ~230px and the names, the stat tiles and the heat map all start truncating.
+
+   min-height is 800 for the same reason, measured rather than guessed: all six
+   blocks need 717px of grid plus 82px of header, so 799. An 11" Pro landscape
+   is 834pt and a 13" is 1024, both clear it — but an 11" inside Safari's
+   toolbar does not, and there the scrolling grid is the honest answer. Adding
+   anything to this screen means re-measuring and raising this number. */
+@media (min-width:1180px) and (min-height:800px) and (orientation:landscape){
+  /* No scroll: the grid is height-constrained by the shell instead. */
+  .emi-grid-hero{
+    overflow:hidden!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    /* hero / Currency / Weakest area (all natural height) / Fleet takes the rest */
+    grid-template-rows:auto auto auto 1fr!important;
+    /* 12px between the stacked cards in column 3, 16px between columns — the
+     row gap is the one that has to pay for Fleet. */
+    gap:12px 16px!important;
+    padding:12px 32px 16px!important;
+  }
+  /* Keeps the phone hero's 232px: the artwork's horizon sits at 60%, and any
+     shorter and "Next check in 96 days" crosses it — 208 was tried and it did.
+     That 232 is also where the height budget below is spent, so it's the first
+     thing to revisit if another block ever has to fit. */
+  .emi-grid-hero>:first-child{grid-column:1/-1;grid-row:1}
+  .emi-h-activity{grid-column:1;grid-row:2/5}
+  .emi-h-lead{grid-column:2;grid-row:2/5}
+  .emi-h-currency{grid-column:3;grid-row:2}
+  .emi-h-focus{grid-column:3;grid-row:3}
+  .emi-h-fleet{grid-column:3;grid-row:4;align-self:start}
+  /* Fleet is the block that pushes column 3 past the viewport, so it runs
+     compact here: a 32px tile and 9px rows instead of 40/14. The rows keep
+     both lines and the Active tag — only the padding goes. */
+  .emi-h-fleet .emi-frow{padding:9px 14px!important}
+  .emi-h-fleet .emi-ftile{width:32px!important;height:32px!important;border-radius:11px!important}
+  /* An 11" Pro is the tight case: 284px columns leave a full name ~2px short.
+     The rank never needs 30px for two digits, and 10px reads as one gap just
+     as well as 12 — together that's the 8px "Peter Schmidt · Mannheim" wants. */
+  .emi-h-lead .emi-lrow{gap:10px!important}
+  .emi-h-lead .emi-lrank{width:24px!important}
+}
 </style>
 </helmet>
 <div class="emi-app">
@@ -179,183 +242,246 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 <!-- ══ HOME ══ -->
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div data-screen-label="Home" style="flex:1;display:flex;flex-direction:column;min-height:0">
-<div style="padding: calc(env(safe-area-inset-top, 0px) + 22px) 20px 0; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; position: relative">
-  <div style="min-width:0">
-    <div style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#5A6672">EASY MEMORY ITEM</div>
-    <h1 style="font-family: 'Inter',sans-serif; font-size:25px; font-weight: 600; letter-spacing: -0.01em; color: #131A21; margin: 3px 0 0; line-height: 1.05">Welcome on Board</h1>
+<div style="padding: calc(env(safe-area-inset-top, 0px) + 22px) 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; position: relative">
+  <div style="min-width:0;flex:1">
+    <div class="emi-hbrand" style="display:flex;align-items:center;gap:7px">
+      <img src="icons/logo.png" alt="" style="width:16px;height:16px;flex:none;display:block">
+      <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#8A97A4">Easy Memory Item</div>
+    </div>
+    <h1 style="font-family:'Inter',sans-serif;font-size:23px;font-weight:600;letter-spacing:-0.02em;color:#131A21;margin:4px 0 0;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Welcome aboard</h1>
   </div>
-  <div onClick="{{ openAircraft }}" class="emi-acchip" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:#5A6672;line-height:1.25;cursor:pointer;display:flex;flex-direction:column;justify-content:center;flex:none;width:160px;height:52px;box-sizing:border-box;border:1px solid #DDE2E8;background:#fff;border-radius:12px;padding:8px 12px;box-shadow:0 1px 2px rgba(19,26,33,0.03);overflow:hidden" style-hover="background:#F7F9FB">
-    <strong style="color:#131A21;font-weight:600;font-size:15px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ aircraft }}</strong>
-    <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ acSub }}</span>
-  </div></div><div class="emi-scroll emi-grid emi-grid-hero" style="flex:1;overflow:auto;padding:16px 20px 28px;display:flex;flex-direction:column;gap:28px">
+  <!-- The aircraft chip is a control, not a label — the up/down caret says so. -->
+  <div onClick="{{ openAircraft }}" class="emi-acchip" style="font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;flex:none;max-width:152px;height:50px;box-sizing:border-box;border:1px solid #DDE2E8;background:#fff;border-radius:14px;padding:0 10px 0 12px;box-shadow:0 1px 2px rgba(19,26,33,0.03);overflow:hidden" style-hover="background:#F7F9FB">
+    <div style="min-width:0;display:flex;flex-direction:column;justify-content:center">
+      <strong style="color:#131A21;font-weight:600;font-size:15px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ aircraft }}</strong>
+      <span style="font-size:11px;font-weight:500;color:#5A6672;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ acSub }}</span>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A97A4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"></path></svg>
+  </div></div><div class="emi-scroll emi-grid emi-grid-hero" style="flex:1;overflow:auto;padding:16px 20px 96px;display:flex;flex-direction:column;gap:28px">
 
-  <div onClick="{{ flipHome }}" style="perspective:1400px;flex:none;height:200px;cursor:pointer">
+  <!-- Hero. The original background is back in full: sky over the instrument
+       band, the glowing horizon, the attitude ladder, the window ticks and
+       antenna, the captain's epaulettes and the amber wing symbol. The artwork
+       keeps a clear top band and centre column to itself, and the copy is laid
+       out around it instead of on top of it — so it reads as a background, not
+       as clutter behind the words. Still flips to the profile; the circular
+       arrow says so. -->
+  <div onClick="{{ flipHome }}" style="perspective:1400px;flex:none;height:232px;cursor:pointer">
   <div style="position:relative;width:100%;height:100%;transition:transform 0.6s cubic-bezier(0.4,0.2,0.2,1);transform-style:preserve-3d;transform:{{ homeFlipTransform }}">
-  <div style="position:absolute;inset:0;border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(14,78,168,0.7);backface-visibility:hidden;-webkit-backface-visibility:hidden;pointer-events:{{ frontPE }}">
-    <div style="position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(180deg,#0E4EA8 0%,#1466D6 62%,#4C93EF 100%)"></div>
-    <div style="position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,#232E38 0%,#33414D 100%)"></div>
-    <div style="position:absolute;left:0;right:0;top:60%;height:1.5px;background:rgba(255,255,255,0.92);box-shadow:0 0 8px rgba(255,255,255,0.4)"></div>
-    <div style="position:absolute;left:50%;top:60%;transform:translateX(-50%)">
+  <div style="position:absolute;inset:0;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(14,78,168,0.7);backface-visibility:hidden;-webkit-backface-visibility:hidden;pointer-events:{{ frontPE }};display:flex;flex-direction:column;padding:44px 18px 16px;box-sizing:border-box">
+    <div style="position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(180deg,#0E4EA8 0%,#1466D6 62%,#4C93EF 100%);pointer-events:none"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,#232E38 0%,#33414D 100%);pointer-events:none"></div>
+    <div style="position:absolute;left:0;right:0;top:60%;height:1.5px;background:rgba(255,255,255,0.92);box-shadow:0 0 8px rgba(255,255,255,0.4);pointer-events:none"></div>
+    <!-- Attitude ladder, centred on the horizon. -->
+    <div style="position:absolute;left:50%;top:60%;transform:translateX(-50%);pointer-events:none">
       <span style="display:block;width:26px;height:1px;background:rgba(255,255,255,0.55);margin:0 auto 16px"></span>
       <span style="display:block;width:44px;height:1px;background:rgba(255,255,255,0.55);margin:0 auto 16px"></span>
       <span style="display:block;width:26px;height:1px;background:rgba(255,255,255,0.35);margin:16px auto 0"></span>
       <span style="display:block;width:44px;height:1px;background:rgba(255,255,255,0.35);margin:16px auto 0"></span>
     </div>
-    <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:16px;align-items:flex-start">
+    <!-- Window ticks + antenna, hanging in the clear band above the copy. -->
+    <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:16px;align-items:flex-start;pointer-events:none">
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
       <span style="width:1px;height:10px;background:#fff"></span>
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
     </div>
-    <span style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #fff"></span>
-    <div style="position:absolute;top:0;right:18px;display:flex;gap:4px;z-index:3">
+    <span style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #fff;pointer-events:none"></span>
+    <!-- Captain's epaulettes. -->
+    <div style="position:absolute;top:0;right:18px;display:flex;gap:4px;pointer-events:none">
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
     </div>
-    
-    <div style="position:absolute;top:60%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center">
+    <!-- Amber wing symbol sitting on the horizon. -->
+    <div style="position:absolute;top:60%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;pointer-events:none">
       <span style="width:34px;height:3px;background:#E7A614;border-radius:4px;box-shadow:0 0 0 1px rgba(19,26,33,0.35)"></span>
       <span style="width:7px;height:7px;background:#E7A614;border-radius:50%;margin:0 8px;box-shadow:0 0 0 1px rgba(19,26,33,0.35)"></span>
       <span style="width:34px;height:3px;background:#E7A614;border-radius:4px;box-shadow:0 0 0 1px rgba(19,26,33,0.35)"></span>
     </div>
-    <div style="position:absolute;left:20px;top:18px;right:20px;z-index:3">
-      <div style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.82)">Ready for briefing</div>
-      <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;color:#fff;letter-spacing:-0.01em;margin-top:4px;text-shadow:0 1px 12px rgba(6,36,80,0.5)">All set, {{ userName }}.</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.9);margin-top:4px;max-width:210px;line-height:1.35;text-shadow:0 1px 10px rgba(6,36,80,0.5)">Next check in 96 days</div>
+    <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.22);border-radius:999px;padding:5px 11px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#fff"><span style="width:6px;height:6px;border-radius:50%;background:#5BE49B;box-shadow:0 0 0 3px rgba(91,228,155,0.28)"></span>Ready for briefing</span>
+      <span title="Flip for profile" style="flex:none;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;color:#fff"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path><path d="M3 21v-5h5"></path></svg></span>
     </div>
-    <div onClick="{{ openStatsHero }}" style="position:absolute;bottom:14px;left:20px;z-index:4;text-align:left;cursor:pointer">
-      <div style="font-family:'Inter',sans-serif;font-weight:700;font-size:34px;line-height:1;color:{{ fitnessColor }}">{{ fitnessPct }}</div>
-      <div style="font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-top:2px">COMPETENCY LEVEL</div>
+    <!-- Copy stops short of the horizon so the wing symbol never touches it. -->
+    <div style="position:relative;margin-top:10px">
+      <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:25px;letter-spacing:-0.02em;color:#fff;line-height:1.1;text-shadow:0 1px 12px rgba(6,36,80,0.35)">All set, {{ userName }}.</div>
+      <div style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.86);margin-top:5px">Next check in 96 days</div>
     </div>
-    <div style="position:absolute;bottom:14px;right:16px;z-index:4;text-align:right">
-      <div style="font-family:'Inter',sans-serif;font-weight:700;font-size:28px;line-height:1;color:#fff">14</div>
-      <div style="font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-top:1px">week streak</div>
+    <!-- The two numbers sit in the outer corners, not side by side: the attitude
+         ladder owns the centre column, and no panel goes behind them — the
+         instrument band is already a flat, quiet surface. -->
+    <div style="position:relative;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div onClick="{{ openStatsHero }}" style="cursor:pointer">
+        <div style="display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;flex:none;background:{{ fitnessColor }};box-shadow:0 0 0 2.5px rgba(255,255,255,0.22)"></span><span style="font-family:'Inter',sans-serif;font-weight:700;font-size:26px;line-height:1;color:#fff">{{ fitnessPct }}</span></div>
+        <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.75);margin-top:6px">Competency</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Inter',sans-serif;font-weight:700;font-size:26px;line-height:1;color:#fff">14</div>
+        <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.75);margin-top:6px">Week streak</div>
+      </div>
     </div>
   </div>
-  <div style="position:absolute;inset:0;border-radius:20px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(14,78,168,0.7);background:#fff;border:1px solid #DDE2E8;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);display:flex;flex-direction:column;pointer-events:{{ backPE }}">
-    <div style="display:flex;align-items:center;gap:16px;padding:16px 16px 16px">
-      <span style="width:50px;height:50px;border-radius:50%;flex:none;background:#EFF3F7;color:#1466D6;display:inline-flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-weight:600;font-size:22px;border:2px solid #1466D6">{{ userInitial }}</span>
+  <div style="position:absolute;inset:0;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(19,26,33,0.45);background:#fff;border:1px solid #DDE2E8;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);display:flex;flex-direction:column;pointer-events:{{ backPE }}">
+    <div style="display:flex;align-items:center;gap:14px;padding:18px 18px 14px">
+      <span style="width:52px;height:52px;border-radius:50%;flex:none;background:#EAF0FA;color:#1466D6;display:inline-flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-weight:600;font-size:21px;border:2px solid #1466D6">{{ userInitial }}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:18px;line-height:1.1;letter-spacing:-0.01em;color:#131A21">{{ userName }} Decker</div>
-        <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif;margin-top:2px">ATPL · {{ aircraft }} type rating</div>
+        <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:18px;line-height:1.15;letter-spacing:-0.015em;color:#131A21;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ userName }} Decker</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
+          <!-- Captain's four bars — the one piece of the old cockpit drawing
+               worth keeping, moved to where rank actually belongs. -->
+          <span style="display:flex;gap:2px;flex:none">
+            <span style="width:3px;height:12px;border-radius:1px;background:linear-gradient(180deg,#F7CE5A,#D99B1C)"></span>
+            <span style="width:3px;height:12px;border-radius:1px;background:linear-gradient(180deg,#F7CE5A,#D99B1C)"></span>
+            <span style="width:3px;height:12px;border-radius:1px;background:linear-gradient(180deg,#F7CE5A,#D99B1C)"></span>
+            <span style="width:3px;height:12px;border-radius:1px;background:linear-gradient(180deg,#F7CE5A,#D99B1C)"></span>
+          </span>
+          <span style="font-family:'Inter',sans-serif;font-size:12px;color:#5A6672;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ATPL · {{ aircraft }} type rating</span>
+        </div>
       </div>
-    <a href="#" onClick="{{ goProfileStop }}" style="margin-left:auto;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:4px">View profile<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a></div>
-    <div style="border-top:1px solid #ECEFF3;padding:12px 16px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <span style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#5A6672;font-weight:600">Badges</span>
-        
+      <a href="#" onClick="{{ goProfileStop }}" title="View profile" style="flex:none;width:32px;height:32px;border-radius:50%;border:1px solid #DDE2E8;background:#fff;color:#1466D6;display:flex;align-items:center;justify-content:center;text-decoration:none" style-hover="background:#F7F9FB"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </div>
+    <div style="border-top:1px solid #ECEFF3;padding:14px 18px 16px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8A97A4;font-weight:600">Badges · {{ badgesEarned }} of 4</span>
+        <a href="#" onClick="{{ openStatsHero }}" style="font-family:'Inter',sans-serif;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:3px;flex:none">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <sc-for list="{{ homeBadges }}" as="b" hint-placeholder-count="4">
-          <span title="{{ b.title }}" style="width:38px;height:38px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ b.iconBg }};color:{{ b.iconColor }};opacity:{{ b.op }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"></path></svg></span>
+          <span title="{{ b.title }}" style="width:40px;height:40px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ b.iconBg }};color:{{ b.iconColor }};opacity:{{ b.op }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"></circle><path d="M8.5 13.5 7 22l5-3 5 3-1.5-8.5"></path></svg></span>
         </sc-for>
-        <a href="#" onClick="{{ openStatsHero }}" style="margin-left:auto;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:3px">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
       </div>
     </div>
   </div>
   </div>
   </div>
 
-  <div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px">
-      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Inter',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.01em;color:#131A21">Currency</span><span style="font-family:'Inter',sans-serif;font-size:11px;color:#5A6672;font-weight:500">last 90 days</span></div>
-      <a href="#" onClick="{{ openLogbook }}" style="font-size:12px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:3px">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+  <!-- The screen's one call to action. Start used to be a read-only dashboard:
+       four cards, nothing to do. This reads the weakest radar axis, so it points
+       at whatever is actually decaying rather than a fixed "take a quiz". -->
+  <div class="emi-tap emi-focus emi-h-focus" onClick="{{ focus.onDrill }}" style="background:#fff;border:1px solid #DDE2E8;border-radius:16px;box-shadow:0 1px 2px rgba(19,26,33,0.03);padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer" style-hover="background:#F7F9FB">
+    <span style="width:44px;height:44px;border-radius:14px;flex:none;background:#EAF0FA;color:#1466D6;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.2" fill="currentColor"></circle></svg></span>
+    <div style="flex:1;min-width:0">
+      <div style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#8A97A4">Weakest area</div>
+      <div style="font-family:'Inter',sans-serif;font-size:16px;font-weight:600;letter-spacing:-0.01em;color:#131A21;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ focus.label }} <span style="color:#5A6672;font-weight:500">{{ focus.pct }}</span></div>
+      <div style="height:5px;border-radius:999px;background:#EEF1F4;margin-top:9px;overflow:hidden"><div style="height:100%;width:{{ focus.barW }};border-radius:999px;background:#1466D6"></div></div>
     </div>
-    <div style="background:#fff;border:1px solid #DDE2E8;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(19,26,33,0.03);padding:16px 16px 12px">
-      <div style="position:relative;height:26px;margin-bottom:2px">
-        <div style="position:absolute;left:72%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center">
-          <span style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#131A21;line-height:1">14 landings</span>
-          <svg width="12" height="7" viewBox="0 0 12 7" style="margin-top:2px"><path d="M6 7L0 0h12z" fill="#131A21"></path></svg>
+    <span style="flex:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:9px 16px;border-radius:999px;background:#1466D6;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.28)">Drill</span>
+  </div>
+
+  <div class="emi-h-currency">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Inter',sans-serif;font-size:17px;font-weight:600;letter-spacing:-0.015em;color:#131A21">Currency</span><span style="font-family:'Inter',sans-serif;font-size:12px;color:#8A97A4;font-weight:500">last 90 days</span></div>
+      <a href="#" onClick="{{ openLogbook }}" style="font-family:'Inter',sans-serif;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:3px;flex:none">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+    </div>
+    <!-- The bar carried three unlabelled colours and a floating "14 landings"
+         tag. The count is now the headline and the colours have a legend, so the
+         card says what it means without being decoded. -->
+    <div style="background:#fff;border:1px solid #DDE2E8;border-radius:16px;box-shadow:0 1px 2px rgba(19,26,33,0.03);padding:16px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px">
+        <div style="display:flex;align-items:baseline;gap:7px;min-width:0">
+          <span style="font-family:'Inter',sans-serif;font-size:26px;font-weight:700;letter-spacing:-0.02em;color:#131A21;line-height:1">14</span>
+          <span style="font-family:'Inter',sans-serif;font-size:13px;color:#5A6672">landings</span>
         </div>
+        <span style="flex:none;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#17A673;background:#E7F6EF;border-radius:999px;padding:5px 12px">Current</span>
       </div>
-      <div style="display:flex;height:12px;border-radius:8px;overflow:hidden">
-        <div style="width:22%;background:#E4483B"></div>
-        <div style="width:33%;background:#EBB236;border-left:2px solid #fff;border-right:2px solid #fff"></div>
-        <div style="flex:1;background:#37A56A"></div>
+      <div style="position:relative">
+        <div style="display:flex;height:10px;border-radius:999px;overflow:hidden">
+          <div style="width:22%;background:#E4483B"></div>
+          <div style="width:33%;background:#EBB236;border-left:2px solid #fff;border-right:2px solid #fff"></div>
+          <div style="flex:1;background:#37A56A"></div>
+        </div>
+        <span style="position:absolute;top:-4px;left:72%;transform:translateX(-50%);width:4px;height:18px;border-radius:999px;background:#fff;box-shadow:0 0 0 2px #131A21"></span>
       </div>
-      <div style="position:relative;height:16px;margin-top:4px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#5A6672">
-        <span style="position:absolute;left:22%;transform:translateX(-50%)">3</span>
-        <span style="position:absolute;left:55%;transform:translateX(-50%)">10</span>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:#5A6672">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:2px;background:#E4483B"></span>Under 3</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:2px;background:#EBB236"></span>3–10</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:2px;background:#37A56A"></span>10 or more</span>
       </div>
     </div>
-  </div><div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px">
-      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Inter',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.01em;color:#131A21">Activity</span></div>
-      <a href="#" onClick="{{ openStats }}" style="font-size:12px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:3px">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+  </div>
+
+  <div class="emi-h-activity">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Inter',sans-serif;font-size:17px;font-weight:600;letter-spacing:-0.015em;color:#131A21">Activity</span><span style="font-family:'Inter',sans-serif;font-size:12px;color:#8A97A4;font-weight:500">past 6 months</span></div>
+      <a href="#" onClick="{{ openStats }}" style="font-family:'Inter',sans-serif;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:3px;flex:none">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
     </div>
     <div style="background:#fff;border:1px solid #DDE2E8;border-radius:16px;box-shadow:0 1px 2px rgba(19,26,33,0.03);padding:16px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
-        <div style="background:#F2F3F5;border-radius:12px;padding:12px 12px">
-          <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">Current</div>
-          <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;color:#131A21;line-height:1.15;margin-top:1px">12</div>
-          <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">weeks</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px">
+        <div style="background:#F7F9FB;border:1px solid #ECEFF3;border-radius:14px;padding:12px">
+          <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8A97A4">Current</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.02em;color:#131A21;line-height:1.15;margin-top:6px">12</div>
+          <div style="font-family:'Inter',sans-serif;font-size:12px;color:#5A6672">weeks</div>
         </div>
-        <div style="background:#F2F3F5;border-radius:12px;padding:12px 12px">
-          <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">Best</div>
-          <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;color:#131A21;line-height:1.15;margin-top:1px">18</div>
-          <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">weeks</div>
+        <div style="background:#F7F9FB;border:1px solid #ECEFF3;border-radius:14px;padding:12px">
+          <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8A97A4">Best</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.02em;color:#131A21;line-height:1.15;margin-top:6px">18</div>
+          <div style="font-family:'Inter',sans-serif;font-size:12px;color:#5A6672">weeks</div>
         </div>
-        <div style="background:#F2F3F5;border-radius:12px;padding:12px 12px">
-          <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">6 months</div>
-          <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;color:#131A21;line-height:1.15;margin-top:1px">92%</div>
-          <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">consistent</div>
+        <div style="background:#F7F9FB;border:1px solid #ECEFF3;border-radius:14px;padding:12px">
+          <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8A97A4">6 months</div>
+          <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:22px;letter-spacing:-0.02em;color:#131A21;line-height:1.15;margin-top:6px">92%</div>
+          <div style="font-family:'Inter',sans-serif;font-size:12px;color:#5A6672">consistent</div>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;color:#5A6672;font-family:'Inter',sans-serif;margin-bottom:8px">
+      <!-- Six equal columns over 26 cells: 26/6 ≈ 4.33, so a centred label sits
+           over the middle of its month instead of drifting like space-between. -->
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:#8A97A4;text-align:center;margin-bottom:8px">
         <span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
       </div>
       <div style="display:flex;gap:3px">
         <sc-for list="{{ streakWeeks }}" as="w" hint-placeholder-count="26">
-          <span style="flex:1;aspect-ratio:1;border-radius:4px;background:{{ w.bg }}"></span>
+          <span style="flex:1;aspect-ratio:1;border-radius:3px;background:{{ w.bgHeat }}"></span>
         </sc-for>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
-        <span style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif">Past 6 months</span>
-        <span style="font-size:11px;font-weight:600;color:#1466D6;background:#EAF0FA;border-radius:999px;padding:4px 12px;font-family:'Inter',sans-serif">4 weeks to next badge</span>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px">
+        <span style="font-family:'Inter',sans-serif;font-size:12px;color:#5A6672">2 weeks missed</span>
+        <span style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#1466D6;background:#EAF0FA;border-radius:999px;padding:5px 12px;flex:none">4 weeks to next badge</span>
       </div>
     </div>
-  </div><div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px">
-      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Inter',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.01em;color:#131A21">Fleet</span><span style="font-family:'Inter',sans-serif;font-size:11px;color:#5A6672;font-weight:500">3</span></div>
-      <a href="#" onClick="{{ openHangars }}" style="font-size:12px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:3px">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+  </div>
+
+  <div class="emi-h-fleet">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Inter',sans-serif;font-size:17px;font-weight:600;letter-spacing:-0.015em;color:#131A21">Fleet</span><span style="font-family:'Inter',sans-serif;font-size:12px;color:#8A97A4;font-weight:500">3 aircraft</span></div>
+      <a href="#" onClick="{{ openHangars }}" style="font-family:'Inter',sans-serif;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:3px;flex:none">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
     </div>
+    <!-- Was a radio list that read like a settings form, with an ACTIVE tag
+         saying the same thing as the filled dot. One signal now: the active row
+         gets the tinted tile and the tag. -->
     <div style="background:#fff;border:1px solid #DDE2E8;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(19,26,33,0.03)">
       <sc-for list="{{ hangar }}" as="h" hint-placeholder-count="3">
-        <div onClick="{{ h.onPick }}" style="display:flex;align-items:center;gap:12px;padding:16px 16px;border-bottom:{{ h.rowBorder }};cursor:pointer" style-hover="background:#F7F9FB">
-          <span style="width:19px;height:19px;flex:none;border-radius:50%;border:1.6px solid {{ h.dotBorder }};background:{{ h.dotBg }};box-shadow:{{ h.dotShadow }}"></span>
+        <div onClick="{{ h.onPick }}" class="emi-frow" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:{{ h.rowBorder }};cursor:pointer" style-hover="background:#F7F9FB">
+          <span class="emi-ftile" style="width:40px;height:40px;border-radius:13px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ h.tileBg }};color:{{ h.tileColor }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l20-6-6 20-4-8-8-4-2-2z"></path></svg></span>
           <div style="flex:1;min-width:0">
-            <div style="font-weight:600;font-size:14px;color:#131A21">{{ h.name }}</div>
-            <div style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif;margin-top:1px">{{ h.sub }}</div>
+            <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:15px;letter-spacing:-0.01em;color:#131A21;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</div>
+            <div style="font-family:'Inter',sans-serif;font-size:12px;color:#5A6672;margin-top:2px">{{ h.sub }}</div>
           </div>
-          <span style="font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#17A673;font-weight:600;display:{{ h.tagDisplay }};align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#17A673;box-shadow:0 0 0 3px rgba(23,166,115,0.14)"></span>Active</span>
+          <span style="font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#17A673;font-weight:600;display:{{ h.tagDisplay }};align-items:center;gap:5px;flex:none"><span style="width:6px;height:6px;border-radius:50%;background:#17A673;box-shadow:0 0 0 3px rgba(23,166,115,0.14)"></span>Active</span>
         </div>
       </sc-for>
     </div>
   </div>
 
-  
-
-  
-
-  <div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin:0 2px 12px">
-      <span style="font-family:'Inter',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.01em;color:#131A21">Leaderboard</span>
-      <a href="#" onClick="{{ openLeaderboard }}" style="font-size:12px;text-decoration:none;font-weight:600;display:flex;align-items:center;gap:3px">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+  <div class="emi-h-lead">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px">
+      <span style="font-family:'Inter',sans-serif;font-size:17px;font-weight:600;letter-spacing:-0.015em;color:#131A21">Leaderboard</span>
+      <a href="#" onClick="{{ openLeaderboard }}" style="font-family:'Inter',sans-serif;font-size:12px;text-decoration:none;font-weight:600;color:#1466D6;display:flex;align-items:center;gap:3px;flex:none">View all<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
     </div>
-    <div style="display:flex;gap:8px;margin:0 2px 12px">
+    <div style="display:flex;gap:8px;margin:0 0 12px">
       <sc-for list="{{ leadFilters }}" as="f" hint-placeholder-count="3">
-        <span class="emi-tap" onClick="{{ f.onPick }}" style="font-size:12px;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }};cursor:pointer">{{ f.label }}</span>
+        <span class="emi-tap" onClick="{{ f.onPick }}" style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid {{ f.border }};background:{{ f.bg }};color:{{ f.color }};cursor:pointer">{{ f.label }}</span>
       </sc-for>
     </div>
     <div style="background:#fff;border:1px solid #DDE2E8;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(19,26,33,0.03)">
       <sc-for list="{{ leadRows }}" as="r" hint-placeholder-count="4">
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:{{ r.rowBorder }};background:{{ r.bg }}">
-          <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:14px;width:38px;flex:none;color:{{ r.rankColor }}">{{ r.rank }}</span>
-          <span style="font-weight:600;font-size:14px;color:{{ r.whoColor }}">{{ r.name }}</span>
-          <span style="font-size:12px;color:#5A6672;font-family:'Inter',sans-serif;margin-left:auto">{{ r.city }}</span>
+        <div class="emi-lrow" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:{{ r.rowBorder }};background:{{ r.bg }}">
+          <span class="emi-lrank" style="font-family:'Inter',sans-serif;font-weight:700;font-size:12px;width:30px;flex:none;color:{{ r.rankColor }};letter-spacing:0.02em">{{ r.rank }}</span>
+          <span style="width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;background:{{ r.avBg }};color:{{ r.avColor }};font-family:'Inter',sans-serif;font-weight:600;font-size:13px">{{ r.initial }}</span>
+          <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:14px;color:{{ r.whoColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+          <span style="font-family:'Inter',sans-serif;font-size:12px;color:#8A97A4;margin-left:auto;flex:none">{{ r.city }}</span>
         </div>
       </sc-for>
     </div>
@@ -1593,12 +1719,17 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 <sc-if value="{{ isWide }}" hint-placeholder-val="{{ false }}">
 <div class="emi-rail" data-collapsed="{{ railCollapsed }}" style="box-sizing:border-box;height:100%;display:flex;flex-direction:column;gap:8px;padding:calc(env(safe-area-inset-top, 0px) + 26px) 14px calc(18px + env(safe-area-inset-bottom));background:rgba(255,255,255,0.62);backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);border-right:1px solid rgba(255,255,255,0.8);box-shadow:0 14px 34px -20px rgba(19,26,33,0.40);z-index:30">
   <div onClick="{{ toggleRail }}" title="{{ railTogTitle }}" class="emi-rrow" style="display:flex;align-items:center;gap:8px;padding:0 8px 20px;cursor:pointer;border-radius:16px">
-    <span style="width:34px;height:34px;flex:none;border-radius:12px;background:linear-gradient(160deg,#0E4EA8 0%,#1466D6 70%,#4C93EF 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px -14px rgba(14,78,168,0.85)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l20-6-6 20-4-8-8-4-2-2z"></path></svg>
-    </span>
+    <!-- The official mark already carries its own rounded-square shape and
+         transparent corners, so no background or border-radius here — the
+         shadow is a drop-shadow filter so it follows the artwork's alpha
+         instead of boxing a square behind it. -->
+    <img src="icons/logo.png" alt="" style="width:34px;height:34px;flex:none;display:block;filter:drop-shadow(0 10px 20px rgba(14,78,168,0.55))">
+    <!-- Wordmark only: the active aircraft lives in each screen's header chip
+         (top-right, as on phone), so repeating it here would double it up. -->
     <div class="emi-rl" style="min-width:0;flex:1">
-      <div style="font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#5A6672;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Easy memory item</div>
-      <div style="font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:#131A21;line-height:1.2">{{ aircraft }}</div>
+      <!-- 13px, not 14: the full name needs 126px at 14px and the rail leaves
+           125px beside the mark and the collapse chevron, so it ellipsized. -->
+      <div style="font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#131A21;line-height:1.2;letter-spacing:-0.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Easy Memory Item</div>
     </div>
     <span class="emi-railtog" style="width:18px;height:18px;flex:none;color:#8A97A4;align-items:center;justify-content:center" style-hover="color:#1466D6">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4v16"></path><path d="m10 9-3 3 3 3"></path></svg>
@@ -1621,13 +1752,6 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ rwSearch }};letter-spacing:-0.005em">Search</span>
   </div>
   <div style="flex:1"></div>
-  <div onClick="{{ openAircraft }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer;background:#fff;border:1px solid #DDE2E8;box-shadow:0 14px 34px -20px rgba(19,26,33,0.40)" style-hover="background:#F7F9FB">
-    <span style="width:32px;height:32px;flex:none;border-radius:12px;background:#EFF3F7;color:#547397;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l20-6-6 20-4-8-8-4-2-2z"></path></svg></span>
-    <div class="emi-rl" style="min-width:0;flex:1">
-      <div style="font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:#131A21;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ aircraft }}</div>
-      <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:#5A6672;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ acSub }}</div>
-    </div>
-  </div>
   <div onClick="{{ goProfile }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer" style-hover="background:#EFF3F7">
     <span style="width:32px;height:32px;flex:none;border-radius:999px;border:2px solid #1466D6;background:#EFF3F7;color:#1466D6;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:12px;font-weight:700">{{ userInitial }}</span>
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:#131A21;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ userName }}</span>
@@ -1897,6 +2021,7 @@ class Component extends DCLogic {
       const on = (aircraft === 'A320' && i === 0) || (aircraft === 'A320neo' && i === 1) || (aircraft === 'DA40' && i === 2);
       return Object.assign({
         name, sub, rowBorder: border(i, 3), tagDisplay: on ? 'flex' : 'none',
+        tileBg: on ? '#EAF0FA' : '#F2F4F7', tileColor: on ? sky : '#8A97A4',
         onPick: () => this.setState({ aircraft: i === 1 ? 'A320neo' : i === 2 ? 'DA40' : 'A320' }),
       }, dot(on));
     });
@@ -1923,7 +2048,9 @@ class Component extends DCLogic {
       const you = name === 'You';
       return {
         rank, name, city, rowBorder: border(i, arr.length),
-        rankColor: you ? sky : (rankColors[i] || '#5A6672'),
+        initial: you ? (userName[0] || 'J') : name[0],
+        avBg: you ? '#EAF0FA' : '#F2F4F7', avColor: you ? sky : '#5A6672',
+        rankColor: you ? sky : (rankColors[i] || '#8A97A4'),
         whoColor: you ? sky : '#131A21',
         bg: you ? 'linear-gradient(90deg, rgba(20,102,214,0.07), rgba(20,102,214,0))' : 'transparent',
       };
@@ -2187,7 +2314,14 @@ class Component extends DCLogic {
       acSub: (() => { const a = acData.find(x => x.key === aircraft) || acData[0]; return a.org + ' | ' + a.reg; })(),
       noop: (e) => { if (e && e.preventDefault) e.preventDefault(); },
       streakWeeks: [0.32,0.4,0.36,0.44,0.4,0.5,0.06,0.5,0.44,0.52,0.46,0.54,0.5,0.44,0.5,0.06,0.06,0.62,0.58,0.64,0.7,0.66,0.74,0.82,0.9,1]
-        .map((l) => ({ bg: l <= 0.1 ? '#EAF0FA' : '#1466D6', bgDark: l <= 0.1 ? 'rgba(255,255,255,0.14)' : '#4C93EF' })),
+        // `bg` is flat on/off for the bar charts on Learn, where height already
+        // encodes the week. The Home grid has no height to spend, so `bgHeat`
+        // ramps the colour instead — otherwise 26 identical blue squares claim
+        // every week was the same.
+        .map((l) => ({
+          bg: l <= 0.1 ? '#EAF0FA' : '#1466D6', bgDark: l <= 0.1 ? 'rgba(255,255,255,0.14)' : '#4C93EF',
+          bgHeat: l <= 0.1 ? '#E6EAF0' : l < 0.45 ? '#B7D2F3' : l < 0.65 ? '#6BA4EA' : l < 0.85 ? '#2E79DC' : '#0E4EA8',
+        })),
       specRows,
       isWide: !!s.wide, isNarrow: !s.wide,
       // Rail width: collapsed by default on the checklist screens (the checklist
@@ -2651,7 +2785,7 @@ function showUpdateBanner(onUpdate) {
 
     var text = document.createElement('div');
     text.style.cssText = 'flex:1 1 auto;min-width:0';
-    text.innerHTML = '<div style="font-weight:600;font-size:15px">Install easy memory item</div>' +
+    text.innerHTML = '<div style="font-weight:600;font-size:15px">Install Easy Memory Item</div>' +
       '<div style="opacity:.85;font-size:12px;margin-top:2px">' + label + '</div>';
 
     var close = document.createElement('button');

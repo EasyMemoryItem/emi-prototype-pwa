@@ -1,11 +1,11 @@
-/* easy memory item — offline service worker.
+/* Easy Memory Item — offline service worker.
  * The app is the design-compiler runtime (support.js) rendering index.html,
  * with React/ReactDOM/Babel and the Inter font vendored locally so nothing is
  * fetched from a CDN. We precache the whole app shell and serve cache-first,
  * which makes the installed PWA fully offline-capable from the first launch.
  * Bump CACHE_VERSION whenever any precached file changes to force a refresh.
  */
-const CACHE_VERSION = 'emi-v6';
+const CACHE_VERSION = 'emi-v10';
 const PRECACHE = [
   './',
   './index.html',
