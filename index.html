@@ -1006,15 +1006,13 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   </sc-if>
   <div>
     <div style="font-family:'Inter',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.01em;color:#131A21;margin:0 2px 12px">Tests</div>
-    <!-- flex:1 1 0 rather than the old flex:1 + width:156px, which fought each
-         other and left the three cards visibly unequal. -->
-    <div style="display:flex;gap:8px;align-items:stretch">
+    <!-- Stacked rather than three-across: at phone width the row squeezed every
+         title and forced the subtitles to wrap onto two lines. -->
+    <div style="display:flex;flex-direction:column;gap:8px">
       <sc-for list="{{ tests }}" as="t" hint-placeholder-count="3">
-        <div onClick="{{ t.onOpen }}" style="flex:1 1 0;min-width:0;box-sizing:border-box;background:#131A21;color:#fff;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:4px;cursor:pointer;box-shadow:0 14px 34px -20px rgba(19,26,33,0.40)" style-hover="background:#232E38">
-          <!-- One line each: a wrapped "Quick Check" beside two unwrapped
-               titles made the row look accidental. -->
-          <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:14px;line-height:1.2;letter-spacing:-0.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.label }}</span>
-          <span style="font-family:'Inter',sans-serif;font-size:11px;line-height:1.3;color:rgba(255,255,255,0.62)">{{ t.sub }}</span>
+        <div onClick="{{ t.onOpen }}" style="box-sizing:border-box;background:#131A21;color:#fff;border-radius:16px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;box-shadow:0 14px 34px -20px rgba(19,26,33,0.40)" style-hover="background:#232E38">
+          <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:16px;line-height:1.2;letter-spacing:-0.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.label }}</span>
+          <span style="flex:none;font-family:'Inter',sans-serif;font-size:12px;line-height:1.3;color:rgba(255,255,255,0.62);white-space:nowrap">{{ t.sub }}</span>
         </div>
       </sc-for>
     </div>
