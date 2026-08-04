@@ -200,10 +200,16 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
    blocks need 717px of grid plus 82px of header, so 799. An 11" Pro landscape
    is 834pt and a 13" is 1024, both clear it — but an 11" inside Safari's
    toolbar does not, and there the scrolling grid is the honest answer. Adding
-   anything to this screen means re-measuring and raising this number. */
+   anything to this screen means re-measuring and raising this number.
+
+   Keyed on .emi-dash, which only Start carries. Learn is also a .emi-grid-hero
+   — it wants the full-width first child from the block above — and when these
+   rules were keyed on that class too it inherited the whole dashboard: a fixed
+   3x4 grid plus overflow:hidden, which silently clipped everything past the
+   fourth row on a screen that has nine sections and expects to scroll. */
 @media (min-width:1180px) and (min-height:800px) and (orientation:landscape){
   /* No scroll: the grid is height-constrained by the shell instead. */
-  .emi-grid-hero{
+  .emi-dash{
     overflow:hidden!important;
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     /* hero / Currency / Weakest area (all natural height) / Fleet takes the rest */
@@ -217,7 +223,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
      shorter and "Next check in 96 days" crosses it — 208 was tried and it did.
      That 232 is also where the height budget below is spent, so it's the first
      thing to revisit if another block ever has to fit. */
-  .emi-grid-hero>:first-child{grid-column:1/-1;grid-row:1}
+  .emi-dash>:first-child{grid-column:1/-1;grid-row:1}
   .emi-h-activity{grid-column:1;grid-row:2/5}
   .emi-h-lead{grid-column:2;grid-row:2/5}
   .emi-h-currency{grid-column:3;grid-row:2}
@@ -257,7 +263,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
       <span style="font-size:11px;font-weight:500;color:#5A6672;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ acSub }}</span>
     </div>
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A97A4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"></path></svg>
-  </div></div><div class="emi-scroll emi-grid emi-grid-hero" style="flex:1;overflow:auto;padding:16px 20px 96px;display:flex;flex-direction:column;gap:28px">
+  </div></div><div class="emi-scroll emi-grid emi-grid-hero emi-dash" style="flex:1;overflow:auto;padding:16px 20px 96px;display:flex;flex-direction:column;gap:28px">
 
   <!-- Hero. The original background is back in full: sky over the instrument
        band, the glowing horizon, the attitude ladder, the window ticks and
