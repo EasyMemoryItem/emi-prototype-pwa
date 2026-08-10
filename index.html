@@ -110,9 +110,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
    wide (desktop/tablet) screens; edge-to-edge on phones. */
 .emi-app{width:100vw;height:100vh;height:100dvh;height:var(--app-h,100dvh);overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;background:#EEF1F4}
 .emi-shell{height:100%;width:100%;max-width:440px;box-sizing:border-box;display:flex;flex-direction:column;font-family:'Inter',sans-serif;color:#131A21;background:#EEF1F4;position:relative}
-.emi-scroll{scrollbar-width:none;padding-bottom:calc(104px + env(safe-area-inset-bottom))!important}.emi-scroll::-webkit-scrollbar{display:none}
-/* Collapse chevron: only ever visible in the expanded iPad rail. */
-.emi-railtog{display:none}
+.emi-scroll{scrollbar-width:none;padding-bottom:calc(118px + env(safe-area-inset-bottom))!important}.emi-scroll::-webkit-scrollbar{display:none}
 
 /* ── iPad ───────────────────────────────────────────────────────────────────
    There are exactly two designs: phone below the switch, iPad above it — no
@@ -133,16 +131,10 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
      gradient here would show as a band behind them. */
   .emi-app{align-items:stretch}
   .emi-shell{max-width:none;flex-direction:row;background:transparent}
-  /* Labelled by default; collapses to icons when the brand row is tapped or
-     automatically on the checklist screens, where a portrait iPad can't
-     afford a 246px rail *and* the checklist sidebar. */
-  .emi-rail{order:-1;flex:none;width:246px;transition:width 0.22s cubic-bezier(0.4,0.2,0.2,1)}
-  .emi-rrow{justify-content:flex-start!important;padding-left:12px!important;padding-right:12px!important}
-  .emi-railtog{display:flex}
-  .emi-rail[data-collapsed="true"]{width:82px}
-  .emi-rail[data-collapsed="true"] .emi-rl{display:none!important}
-  .emi-rail[data-collapsed="true"] .emi-rrow{justify-content:center!important;padding-left:0!important;padding-right:0!important}
-  .emi-rail[data-collapsed="true"] .emi-railtog{display:none}
+  /* Fixed icon + label rail — always expanded, labels sit under icons. */
+  .emi-rail{order:-1;flex:none;width:88px}
+  .emi-rrow{flex-direction:column!important;align-items:center!important;justify-content:center!important;padding-left:8px!important;padding-right:8px!important;text-align:center}
+  .emi-rl{font-size:10px!important;line-height:1.15!important;letter-spacing:0.01em!important}
   [data-screen-label]{width:100%;max-width:1180px;margin:0 auto;min-width:0}
   .emi-scroll{padding-bottom:32px!important}
   [style*="safe-area-inset-top"]:not(.emi-rail){padding-top:32px!important;padding-left:32px!important;padding-right:32px!important}
@@ -1721,44 +1713,31 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 
 <!-- ══ NAV RAIL (tablet / iPad) ══ -->
 <sc-if value="{{ isWide }}" hint-placeholder-val="{{ false }}">
-<div class="emi-rail" data-collapsed="{{ railCollapsed }}" style="box-sizing:border-box;height:100%;display:flex;flex-direction:column;gap:8px;padding:calc(env(safe-area-inset-top, 0px) + 26px) 14px calc(18px + env(safe-area-inset-bottom));background:rgba(255,255,255,0.62);backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);border-right:1px solid rgba(255,255,255,0.8);box-shadow:0 14px 34px -20px rgba(19,26,33,0.40);z-index:30">
-  <div onClick="{{ toggleRail }}" title="{{ railTogTitle }}" class="emi-rrow" style="display:flex;align-items:center;gap:8px;padding:0 8px 20px;cursor:pointer;border-radius:16px">
-    <!-- The official mark already carries its own rounded-square shape and
-         transparent corners, so no background or border-radius here — the
-         shadow is a drop-shadow filter so it follows the artwork's alpha
-         instead of boxing a square behind it. -->
+<div class="emi-rail" style="box-sizing:border-box;height:100%;display:flex;flex-direction:column;gap:8px;padding:calc(env(safe-area-inset-top, 0px) + 26px) 8px calc(18px + env(safe-area-inset-bottom));background:rgba(255,255,255,0.62);backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);border-right:1px solid rgba(255,255,255,0.8);box-shadow:0 14px 34px -20px rgba(19,26,33,0.40);z-index:30">
+  <div class="emi-rrow" style="display:flex;align-items:center;gap:6px;padding:0 4px 20px;border-radius:16px">
     <img src="icons/logo.png" alt="" style="width:34px;height:34px;flex:none;display:block;filter:drop-shadow(0 10px 20px rgba(14,78,168,0.55))">
-    <!-- Wordmark only: the active aircraft lives in each screen's header chip
-         (top-right, as on phone), so repeating it here would double it up. -->
-    <div class="emi-rl" style="min-width:0;flex:1">
-      <!-- 13px, not 14: the full name needs 126px at 14px and the rail leaves
-           125px beside the mark and the collapse chevron, so it ellipsized. -->
-      <div style="font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#131A21;line-height:1.2;letter-spacing:-0.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Easy Memory Item</div>
-    </div>
-    <span class="emi-railtog" style="width:18px;height:18px;flex:none;color:#8A97A4;align-items:center;justify-content:center" style-hover="color:#1466D6">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4v16"></path><path d="m10 9-3 3 3 3"></path></svg>
-    </span>
+    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#131A21;line-height:1.15;letter-spacing:0.01em">EMI</span>
   </div>
-  <div onClick="{{ goHome }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ rbHome }};color:{{ rtHome }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goHome }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbHome }};color:{{ rtHome }};transition:background 0.18s" style-hover="background:#EFF3F7">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riHome }};color:{{ rcHome }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10"></path></svg></span>
-    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ rwHome }};letter-spacing:-0.005em">Start</span>
+    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwHome }}">Start</span>
   </div>
-  <div onClick="{{ goFlight }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ rbFlight }};color:{{ rtFlight }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goFlight }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbFlight }};color:{{ rtFlight }};transition:background 0.18s" style-hover="background:#EFF3F7">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riFlight }};color:{{ rcFlight }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l20-6-6 20-4-8-8-4-2-2z"></path></svg></span>
-    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ rwFlight }};letter-spacing:-0.005em">Flight</span>
+    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwFlight }}">Flight</span>
   </div>
-  <div onClick="{{ goLearn }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ rbLearn }};color:{{ rtLearn }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goLearn }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbLearn }};color:{{ rtLearn }};transition:background 0.18s" style-hover="background:#EFF3F7">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riLearn }};color:{{ rcLearn }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h11v16H6a2 2 0 00-2 2V5z"></path><path d="M17 3v16"></path></svg></span>
-    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ rwLearn }};letter-spacing:-0.005em">Learn</span>
+    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwLearn }}">Learn</span>
   </div>
-  <div onClick="{{ goSearch }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ rbSearch }};color:{{ rtSearch }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goSearch }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbSearch }};color:{{ rtSearch }};transition:background 0.18s" style-hover="background:#EFF3F7">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riSearch }};color:{{ rcSearch }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></span>
-    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ rwSearch }};letter-spacing:-0.005em">Search</span>
+    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwSearch }}">Search</span>
   </div>
   <div style="flex:1"></div>
-  <div onClick="{{ goProfile }}" class="emi-rrow" style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:16px;cursor:pointer" style-hover="background:#EFF3F7">
+  <div onClick="{{ goProfile }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer" style-hover="background:#EFF3F7">
     <span style="width:32px;height:32px;flex:none;border-radius:999px;border:2px solid #1466D6;background:#EFF3F7;color:#1466D6;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:12px;font-weight:700">{{ userInitial }}</span>
-    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:#131A21;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ userName }}</span>
+    <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:600;color:#131A21;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ userName }}</span>
   </div>
 </div>
 </sc-if>
@@ -1767,16 +1746,16 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;align-items:center;gap:8px;padding:0 14px calc(20px + env(safe-area-inset-bottom));pointer-events:none;z-index:30">
   <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); -webkit-mask-image: linear-gradient(to top,#000 45%,transparent); mask-image: linear-gradient(to top,#000 45%,transparent); pointer-events: none"></div>
-  <div style="pointer-events: auto; display: flex; gap: 2px; width: 239px; justify-content: space-around; background: rgba(255,255,255,0.62); backdrop-filter: blur(26px) saturate(180%); -webkit-backdrop-filter: blur(26px) saturate(180%); border: 1px solid rgba(255,255,255,0.75); border-radius: 28px; padding: 8px; box-shadow: 0 14px 34px -10px rgba(19,26,33,0.34),0 2px 8px rgba(19,26,33,0.08),inset 0 1px 0 rgba(255,255,255,0.6); height: 53px">
-    <div onClick="{{ goHome }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:{{ tHome }};padding:8px 16px;border-radius:20px;background:{{ bHome }};transition:background 0.18s">
+  <div style="pointer-events: auto; display: flex; gap: 2px; width: 239px; justify-content: space-around; background: rgba(255,255,255,0.62); backdrop-filter: blur(26px) saturate(180%); -webkit-backdrop-filter: blur(26px) saturate(180%); border: 1px solid rgba(255,255,255,0.75); border-radius: 28px; padding: 8px 6px; box-shadow: 0 14px 34px -10px rgba(19,26,33,0.34),0 2px 8px rgba(19,26,33,0.08),inset 0 1px 0 rgba(255,255,255,0.6)">
+    <div onClick="{{ goHome }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:{{ tHome }};padding:6px 12px;border-radius:20px;background:{{ bHome }};transition:background 0.18s">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10"></path></svg>
       <span style="font-size:11px;font-weight:{{ wHome }};letter-spacing:0.01em">Start</span>
     </div>
-    <div onClick="{{ goFlight }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:{{ tFlight }};padding:8px 16px;border-radius:20px;background:{{ bFlight }};transition:background 0.18s">
+    <div onClick="{{ goFlight }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:{{ tFlight }};padding:6px 12px;border-radius:20px;background:{{ bFlight }};transition:background 0.18s">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l20-6-6 20-4-8-8-4-2-2z"></path></svg>
       <span style="font-size:11px;font-weight:{{ wFlight }};letter-spacing:0.01em">Flight</span>
     </div>
-    <div onClick="{{ goLearn }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:{{ tLearn }};padding:8px 16px;border-radius:20px;background:{{ bLearn }};transition:background 0.18s">
+    <div onClick="{{ goLearn }}" style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:{{ tLearn }};padding:6px 12px;border-radius:20px;background:{{ bLearn }};transition:background 0.18s">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h11v16H6a2 2 0 00-2 2V5z"></path><path d="M17 3v16"></path></svg>
       <span style="font-size:11px;font-weight:{{ wLearn }};letter-spacing:0.01em">Learn</span>
     </div>
@@ -1795,7 +1774,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 class Component extends DCLogic {
   // The one iPad/phone switch — keep in sync with the @media query in the helmet.
   static MQ_TABLET = '(min-width:700px) and (min-height:700px), (min-width:1100px)';
-  state = { screen: 'home', group: 'normals', phaseIdx: 1, checks: {}, skips: {}, aircraft: null, quiz: null, limRead: { 0: true, 3: true }, limReadLearn: { 0: true, 3: true }, studyCl: false, revealCl: 0, studyLim: false, revealLim: 0, leadTab: 0, phasesOrigin: 'flight', searchQuery: '', railOpen: null, wide: typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(Component.MQ_TABLET).matches : false };
+  state = { screen: 'home', group: 'normals', phaseIdx: 1, checks: {}, skips: {}, aircraft: null, quiz: null, limRead: { 0: true, 3: true }, limReadLearn: { 0: true, 3: true }, studyCl: false, revealCl: 0, studyLim: false, revealLim: 0, leadTab: 0, phasesOrigin: 'flight', searchQuery: '', wide: typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(Component.MQ_TABLET).matches : false };
 
   searchIndex() {
     if (this._searchIdx) return this._searchIdx;
@@ -1877,12 +1856,8 @@ class Component extends DCLogic {
     return (title || '') === 'Proficiency Check' ? Component.QUIZ.concat([Component.PROF_ORDER]) : Component.QUIZ;
   }
 
-  static isCl(screen) { return screen === 'checklist' || screen === 'lchecklist'; }
   nav(screen, extra) {
-    // Entering or leaving a checklist drops any manual rail override, so the
-    // auto-collapse applies again next time the checklist is opened.
-    const reset = Component.isCl(screen) !== Component.isCl(this.state.screen) ? { railOpen: null } : null;
-    this.setState(Object.assign({ screen, searchOpen: false }, reset, extra || {}));
+    this.setState(Object.assign({ screen, searchOpen: false }, extra || {}));
   }
   componentDidMount() {
     this._onKey = (e) => { if (e.key === 'Escape' && this.state.searchOpen) this.setState({ searchOpen: false }); };
@@ -1976,7 +1951,6 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state, D = Component.DATA;
-    const railCollapsed = s.railOpen === null ? Component.isCl(s.screen) : !s.railOpen;
     const aircraft = s.aircraft || this.props.aircraft || 'A320';
     const userName = this.props.userName || 'Philipp';
     const sky = '#1466D6', dim = '#C2C9D1';
@@ -2328,12 +2302,6 @@ class Component extends DCLogic {
         })),
       specRows,
       isWide: !!s.wide, isNarrow: !s.wide,
-      // Rail width: collapsed by default on the checklist screens (the checklist
-      // sidebar needs the room), expanded elsewhere — until the user overrides it
-      // by tapping the brand row. Below 1024px CSS keeps it collapsed regardless.
-      railCollapsed: railCollapsed ? 'true' : 'false',
-      railTogTitle: railCollapsed ? 'Expand sidebar' : 'Collapse sidebar',
-      toggleRail: () => this.setState({ railOpen: railCollapsed }),
       isHome: s.screen === 'home', isFlight: s.screen === 'flight', isPhases: s.screen === 'phases',
       isChecklist: s.screen === 'checklist', isLearnChecklist: s.screen === 'lchecklist', isFM: s.screen === 'fm', isLearn: s.screen === 'learn',
       isMemPhases: s.screen === 'memPhases',

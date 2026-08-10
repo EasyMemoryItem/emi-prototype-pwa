@@ -5,7 +5,8 @@
  * which makes the installed PWA fully offline-capable from the first launch.
  * Bump CACHE_VERSION whenever any precached file changes to force a refresh.
  */
-const CACHE_VERSION = 'emi-v13';
+const CACHE_VERSION = 'emi-v14';
+const IS_LOCAL = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 const PRECACHE = [
   './',
   './index.html',
@@ -31,6 +32,8 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', (event) => {
+  // Local dev: activate immediately and always fetch fresh assets on reload.
+  if (IS_LOCAL) self.skipWaiting();
   // Precache the shell, but do NOT skipWaiting here: the new worker stays in
   // the "waiting" state so the page can surface an "Update available" prompt.
   // The user accepts by triggering SKIP_WAITING (see the message handler below).
@@ -83,8 +86,16 @@ self.addEventListener('fetch', (event) => {
   // Navigation requests: serve the cached app shell so the app opens offline.
   if (req.mode === 'navigate') {
     event.respondWith(
-      caches.match('./index.html').then((cached) => cached || fetch(req))
+      IS_LOCAL
+        ? fetch(req)
+        : caches.match('./index.html').then((cached) => cached || fetch(req))
     );
+    return;
+  }
+
+  // Local dev: always hit the network so UI edits show up on refresh.
+  if (IS_LOCAL) {
+    event.respondWith(fetch(req));
     return;
   }
 
