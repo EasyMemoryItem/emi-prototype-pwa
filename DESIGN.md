@@ -246,6 +246,7 @@ A cool, low-saturation slate-and-white field with one authoritative blue and a t
 Sizes are the project's own `--fs-*` scale. Negative tracking tightens as size grows.
 
 - **`fs-3xl`** (600, 25px, 1.05, −0.02em, Ink): the screen title, once per screen, top-left. "Welcome on Board", "Flight", "Learn".
+- **Hero display** (600, 38px greeting / 34px statistic, −0.025em, white): the Start hero at canvas width only, where the card is 1180px wide and 400px tall. This tier lives above the ramp and is bounded to that one element — the phone hero's 25px/26px pair is the same two roles at phone scale. No other surface may reach past `fs-3xl`.
 - **`fs-2xl`** (600, 22px, −0.02em, Ink): large statistics — a proficiency percentage, a streak count.
 - **`fs-xl`** (600, 18px, 1.15, −0.015em, Ink): card titles and section heads inside a screen.
 - **`fs-lg`** (600, 15px, −0.01em, Ink): checklist item labels, list-row primaries, full-width button labels. The workhorse.
@@ -277,13 +278,22 @@ The spacing scale is `--sp-1..12` — 4 · 8 · 12 · 16 · 20 · 24 · 32 · 48
 - Cards soften: radius `--r-lg` (16px) → `--r-xl` (20px), and the hairline shadow is replaced by `0 10px 26px -16px rgba(19,26,33,0.22)`.
 - The checklist becomes master/detail: a 300px left column holding the phase list and a limitations card.
 
-**iPad Pro landscape** (`min-width: 1180px and min-height: 800px and orientation: landscape`). Start becomes a fixed, non-scrolling dashboard: a full-width hero over three columns — Activity | Leaderboard | (Currency + Weakest area + Fleet stacked). The 1180px threshold is deliberate: it is the narrowest width that leaves ~284px per column after the rail and padding, which is what a full leaderboard row needs. Narrower iPads keep the auto-fit grid and scroll.
+**Start on iPad — the hero leads, and the cards keep their own height.** Start is a fixed, non-scrolling glance surface on every iPad, in both orientations. The composition is the same idea turned ninety degrees: the hero takes the slack, and every card is the height of what is inside it.
+
+- **Landscape** (`min-width: 1180px and min-height: 800px and orientation: landscape`): a full-bleed hero over two card rows — Activity | Leaderboard | Fleet, then Weakest area | Currency. Grid rows are `minmax(200px, 1fr) auto auto`, so the cards take their content height and the hero absorbs what is left: ~400px on a 13" (1024pt), ~210px on an 11" (834pt). The 1180px threshold leaves ~340px per column after the 88px rail and 32px gutters, comfortably past the ~278px a full leaderboard row needs.
+- **Portrait** (`min-width: 700px and min-height: 1000px and orientation: portrait`): hero, then Weakest area full width, then Activity | Leaderboard and Currency | Fleet. Rows are `minmax(280px, 1fr) auto auto auto` — again the hero alone takes the slack, giving it 341px on a mini and 574px on a 13".
+- Blocks are grouped by **shape, not by topic**: lists and charts share the tall row because they can spend height on rows; single lines of state share the short one because they cannot.
+- Anything that does not clear those thresholds — an iPad window inside Safari chrome, a mini in landscape — keeps the two-column scrolling layout, where the same pairing applies but cards sit at natural height and the hero is capped at `min(34vh, 360px)`.
+
+**The hero at canvas scale.** The artwork is drawn for a 400px-wide card; at 1180px every mark is redrawn rather than transform-scaled, so the 1px attitude ladder stays 1px: 108px rungs, a 78px wing symbol, 46px epaulettes, and a 38px greeting. Above `min-height: 940px` (landscape) or `1000px` (portrait) the hero clears 300px and takes that full cinematic scale; between 800 and 940 it runs a moderate tier — 74px rungs, a 54px wing — because at ~210px tall the enlarged wing crowds "Next check in 96 days".
 
 **Touch targets.** `--tap: 44px` is enforced on compact pills via `.emi-tap::after` — an invisible pseudo-element that extends the hit area vertically without growing the visual box. Any control smaller than 44px in either axis must carry this treatment.
 
 ### Named Rules
 
-**The Glance Surface Rule.** On the iPad Pro landscape canvas, Start must fit the viewport. If content is added to that dashboard, something else gives up space — the user never scrolls to reach the leaderboard.
+**The Glance Surface Rule.** On any iPad canvas, in either orientation, Start must fit the viewport. If content is added to that dashboard, something else gives up space — the user never scrolls to reach the leaderboard. The height budgets in the stylesheet are measured, not guessed; adding a block means re-measuring them and raising the `min-height` gate.
+
+**The Hero Takes the Slack Rule.** When a fixed dashboard has more height than its content, the surplus goes to the hero, never to the cards. A card stretched past its content opens a hole — a 26px number, a bar and a legend spread down a 330px cell, or month labels pulled off the heat map they label. Cards get `auto` rows; the hero gets the `1fr`. Where a card must be levelled with a taller neighbour, pin its last line with `margin-top: auto` rather than spreading every line with `space-between`; a list card levels honestly by letting its rows grow (`flex: 1 0 auto`).
 
 **The Rail Replaces the Bar Rule.** The glass tab bar and the left rail are the same navigation in two forms; they never appear together, and the rail carries the brand mark so the header drops its logo (`.emi-hbrand img { display: none }`).
 

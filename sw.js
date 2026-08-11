@@ -5,7 +5,7 @@
  * which makes the installed PWA fully offline-capable from the first launch.
  * Bump CACHE_VERSION whenever any precached file changes to force a refresh.
  */
-const CACHE_VERSION = 'emi-v16';
+const CACHE_VERSION = 'emi-v17';
 const IS_LOCAL = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 const PRECACHE = [
   './',

@@ -144,6 +144,25 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   /* One-line cards keep their own height instead of being stretched to the
      tallest cell in the row — a 240px-tall "Weakest area" card is all padding. */
   .emi-focus{align-self:start!important}
+
+  /* ── Start at tablet size (portrait iPads, and landscape ones too short for
+     the dashboard below) ──────────────────────────────────────────────────
+     auto-fit used to place these six blocks by width alone, which paired a
+     ~300px-tall Activity with a ~190px Currency and left a hole under the
+     short one. The pairing here is by height instead: Activity with
+     Leaderboard (both tall), Currency with Fleet (both short), so the two
+     columns end close to level. The hero leads at a scale the artwork can
+     carry — 232px is a phone number, and stretched to 700px+ wide it reads as
+     a letterbox. Cards keep their natural height and this screen scrolls;
+     only the landscape dashboard below is a fixed glance surface. */
+  .emi-dash{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .emi-dash>:first-child{grid-row:1;height:min(34vh,360px)!important}
+  .emi-h-focus{grid-column:1/-1;grid-row:2}
+  .emi-h-activity{grid-column:1;grid-row:3}
+  .emi-h-lead{grid-column:2;grid-row:3}
+  .emi-h-currency{grid-column:1;grid-row:4}
+  .emi-h-fleet{grid-column:2;grid-row:4}
+  .emi-h-activity,.emi-h-lead,.emi-h-currency,.emi-h-fleet{align-self:start}
   /* Single-column screens: cap the whole screen, not just the scroll body, so
      the header and the content keep a shared left edge. */
   [data-screen-label]:has(>.emi-narrow){max-width:772px}
@@ -171,66 +190,197 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
 }
 
 /* ── iPad Pro landscape: Start is a fixed dashboard, not a scroll ────────────
-   Above this switch there are three columns under a full-width hero, and the
-   whole screen fits the viewport — Start is a glance surface on a big canvas,
-   so the user should never have to scroll to see the leaderboard.
-     col 1  Activity      (spans all three content rows)
-     col 2  Leaderboard   (spans all three content rows)
-     col 3  Currency  +  Weakest area  +  Fleet, stacked
-   Column 3 carries the stack because it holds the three shortest blocks;
-   putting Fleet under Activity instead costs the same height but strands it in
-   a row sized by Activity, which leaves a dead gap above Weakest area.
+   Above this switch the hero leads at full bleed and the whole screen fits the
+   viewport — Start is a glance surface on a big canvas, so the user should
+   never have to scroll to see the leaderboard.
+     row 1  hero, full width, taking whatever the two card rows leave
+     row 2  Activity | Leaderboard | Fleet      (the three list-shaped blocks)
+     row 3  Weakest area | Currency             (the two strip-shaped blocks)
+   The blocks are grouped by shape, not by topic. Pairing Currency with
+   Activity was tried first and it hollowed the currency card out: a 26px
+   number, a bar and a legend stretched down a 330px cell. Everything in row 2
+   is a list or a chart that can spend the height on rows; everything in row 3
+   is a single line of state that cannot.
+   The hero is the flexible row and the cards are `auto`, not the other way
+   round: the cards have a height their content actually needs, and the hero is
+   the one block that reads better the more room it gets. That inversion is
+   what fixed the old layout, where six phone-height cards left the bottom 40%
+   of a 13" screen empty.
 
-   1180px is the 13" Air / iPad Pro landscape width (11" is 1194, 13" is 1366),
-   which leaves ~284px per column once the 246px rail and the page padding are
-   out — just enough for a full leaderboard row ("Peter Schmidt · Mannheim"
-   needs ~278). Everything narrower — a 1024pt iPad, an iPad mini, any portrait
-   iPad — keeps the auto-fit grid above and scrolls: three columns there are
-   ~230px and the names, the stat tiles and the heat map all start truncating.
+   The previous version stacked Currency + Weakest area + Fleet in a third
+   column beside full-height Activity and Leaderboard spans. The spans were the
+   bug: the wrapper stretched, the card inside kept its phone height, and every
+   column ended in dead grey.
 
-   min-height is 800 for the same reason, measured rather than guessed: all six
-   blocks need 717px of grid plus 82px of header, so 799. An 11" Pro landscape
-   is 834pt and a 13" is 1024, both clear it — but an 11" inside Safari's
-   toolbar does not, and there the scrolling grid is the honest answer. Adding
-   anything to this screen means re-measuring and raising this number.
+   1180px is the 13" Air / iPad Pro landscape width (11" is 1194, 13" is 1366).
+   Three columns leave ~340px each once the 88px rail and the 32px gutters are
+   out — comfortably past the ~278px a full leaderboard row ("Peter Schmidt ·
+   Mannheim") needs, which the old three-column-plus-stack layout only just
+   cleared. Everything narrower — a 1024pt iPad, an iPad mini, any portrait
+   iPad — keeps the two-column scrolling layout above.
+
+   min-height 800 is measured, not guessed: the two card rows need 300 + 190
+   plus 28px of gaps, and the hero's 200px floor plus the 82px header puts the
+   minimum at 800 exactly. An 11" Pro landscape is 834pt and a 13" is 1024;
+   an 11" inside Safari's toolbar chrome falls short and gets the scrolling
+   layout, which is the honest answer at that height. Adding a block here means
+   re-measuring and raising this number.
 
    Keyed on .emi-dash, which only Start carries. Learn is also a .emi-grid-hero
    — it wants the full-width first child from the block above — and when these
    rules were keyed on that class too it inherited the whole dashboard: a fixed
-   3x4 grid plus overflow:hidden, which silently clipped everything past the
-   fourth row on a screen that has nine sections and expects to scroll. */
+   grid plus overflow:hidden, which silently clipped everything past the fourth
+   row on a screen that has nine sections and expects to scroll. */
 @media (min-width:1180px) and (min-height:800px) and (orientation:landscape){
   /* No scroll: the grid is height-constrained by the shell instead. */
   .emi-dash{
     overflow:hidden!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    /* hero / Currency / Weakest area (all natural height) / Fleet takes the rest */
-    grid-template-rows:auto auto auto 1fr!important;
-    /* 12px between the stacked cards in column 3, 16px between columns — the
-     row gap is the one that has to pay for Fleet. */
-    gap:12px 16px!important;
-    padding:12px 32px 16px!important;
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    /* The hero absorbs the slack; 200px is the floor at which the horizon
+       still clears the copy on the shortest qualifying screen. */
+    grid-template-rows:minmax(200px,1fr) auto auto!important;
+    gap:14px 16px!important;
+    padding:12px 32px 20px!important;
   }
-  /* Keeps the phone hero's 232px: the artwork's horizon sits at 60%, and any
-     shorter and "Next check in 96 days" crosses it — 208 was tried and it did.
-     That 232 is also where the height budget below is spent, so it's the first
-     thing to revisit if another block ever has to fit. */
-  .emi-dash>:first-child{grid-column:1/-1;grid-row:1}
-  .emi-h-activity{grid-column:1;grid-row:2/5}
-  .emi-h-lead{grid-column:2;grid-row:2/5}
-  .emi-h-currency{grid-column:3;grid-row:2}
-  .emi-h-focus{grid-column:3;grid-row:3}
-  .emi-h-fleet{grid-column:3;grid-row:4;align-self:start}
-  /* Fleet is the block that pushes column 3 past the viewport, so it runs
-     compact here: a 32px tile and 9px rows instead of 40/14. The rows keep
-     both lines and the Active tag — only the padding goes. */
-  .emi-h-fleet .emi-frow{padding:9px 14px!important}
-  .emi-h-fleet .emi-ftile{width:32px!important;height:32px!important;border-radius:12px!important}
-  /* An 11" Pro is the tight case: 284px columns leave a full name ~2px short.
-     The rank never needs 30px for two digits, and 10px reads as one gap just
-     as well as 12 — together that's the 8px "Peter Schmidt · Mannheim" wants. */
-  .emi-h-lead .emi-lrow{gap:10px!important}
-  .emi-h-lead .emi-lrank{width:24px!important}
+  .emi-dash>:first-child{grid-column:1/-1;grid-row:1;height:auto!important}
+  .emi-h-activity{grid-column:1/3;grid-row:2}
+  .emi-h-lead{grid-column:3/5;grid-row:2}
+  .emi-h-fleet{grid-column:5/7;grid-row:2}
+  .emi-h-focus{grid-column:1/4;grid-row:3}
+  .emi-h-currency{grid-column:4/7;grid-row:3}
+  /* Row 2 reads as one band, so the three cards share an edge top and bottom
+     rather than ending ragged. Activity sets the height; the other two spend
+     it on their own rows — see the taller leaderboard and fleet rows below —
+     instead of on an empty middle. */
+  .emi-h-currency,.emi-h-activity,.emi-h-lead,.emi-h-fleet{
+    align-self:stretch;display:flex;flex-direction:column;min-height:0;
+  }
+  .emi-h-currency>div:last-child,.emi-h-activity>div:last-child,
+  .emi-h-lead>div:last-child,.emi-h-fleet>div:last-child{
+    flex:1;min-height:0;display:flex;flex-direction:column;
+  }
+  /* The slack goes under the last line, not between every line: spreading the
+     activity card evenly pulled the month labels off the heat map they label. */
+  .emi-h-currency>div:last-child>*:last-child,
+  .emi-h-activity>div:last-child>*:last-child{margin-top:auto!important}
+  /* Fleet and the leaderboard hold four and three rows; if a longer list ever
+     lands here it scrolls inside the card rather than pushing the grid. */
+  .emi-h-lead>div:last-child,.emi-h-fleet>div:last-child{overflow:auto;scrollbar-width:none}
+  .emi-h-lead>div:last-child::-webkit-scrollbar,
+  .emi-h-fleet>div:last-child::-webkit-scrollbar{display:none}
+  /* The bar and the rows are what grow into the taller row — 10px of bar in a
+     300px card is the hollow-card look this layout exists to avoid. */
+  .emi-h-currency .emi-cbar{height:14px!important}
+  .emi-h-currency .emi-cmark{height:22px!important;top:-4px!important}
+  .emi-h-lead .emi-lrow,.emi-h-fleet .emi-frow{
+    padding:15px 16px!important;flex:1 0 auto;
+  }
+  /* Weakest area is the one action on the screen, so it grows with the row —
+     but only as far as the short tier can afford; the tall tier below spends
+     more on it. */
+  .emi-h-focus{align-self:stretch!important;padding:16px 20px!important;border-radius:20px!important}
+  .emi-h-focus>div>div:nth-child(2){font-size:18px!important}
+
+  /* ── The hero at full bleed ──────────────────────────────────────────────
+     The artwork is drawn at phone scale: a 34px wing symbol and a 44px ladder
+     rung are correct in a 400px-wide card and disappear in a 1180px one. Every
+     mark here is redrawn to the canvas, not transform-scaled, so the 1px lines
+     stay 1px and the horizon stays crisp. This tier is the moderate one — see
+     the height gate below for the full cinematic scale. */
+  .emi-hero-face{padding:30px 30px 26px!important;border-radius:22px!important}
+  .emi-hero-ladder>span:nth-child(1){width:44px!important;margin-bottom:20px!important}
+  .emi-hero-ladder>span:nth-child(2){width:74px!important;margin-bottom:20px!important}
+  .emi-hero-ladder>span:nth-child(3){width:44px!important;margin-top:20px!important}
+  .emi-hero-ladder>span:nth-child(4){width:74px!important;margin-top:20px!important}
+  .emi-hero-wing>span:nth-child(1),.emi-hero-wing>span:nth-child(3){width:54px!important}
+  .emi-hero-wing>span:nth-child(2){width:9px!important;height:9px!important;margin:0 11px!important}
+  .emi-hero-ticks{gap:22px!important}
+  .emi-hero-ep{right:26px!important;gap:5px!important}
+  .emi-hero-ep>span{width:10px!important;height:38px!important}
+}
+
+/* ── The cinematic tier ──────────────────────────────────────────────────────
+   Everything above fits an 11" Pro landscape (834pt), but only just: there the
+   hero gets ~250px and the artwork has to stay near phone scale or the horizon
+   crosses "Next check in 96 days" — 209px was tried and it did. A 13" Air or
+   Pro in landscape is 1024pt, which leaves the hero ~400px, and that is where
+   the artwork is redrawn to the canvas: a 78px wing, 108px ladder rungs, a
+   38px greeting. 940 is the measured threshold — the height at which the hero
+   clears 300px, which is where the enlarged wing symbol stops crowding the
+   copy above it. */
+@media (min-width:1180px) and (min-height:940px) and (orientation:landscape),
+       (min-width:700px) and (min-height:1000px) and (orientation:portrait){
+  .emi-hero-face{padding:36px 34px 30px!important}
+  .emi-hero-ladder>span:nth-child(1){width:64px!important;margin-bottom:26px!important}
+  .emi-hero-ladder>span:nth-child(2){width:108px!important;margin-bottom:26px!important}
+  .emi-hero-ladder>span:nth-child(3){width:64px!important;margin-top:26px!important}
+  .emi-hero-ladder>span:nth-child(4){width:108px!important;margin-top:26px!important}
+  .emi-hero-wing>span:nth-child(1),.emi-hero-wing>span:nth-child(3){width:78px!important;height:4px!important}
+  .emi-hero-wing>span:nth-child(2){width:11px!important;height:11px!important;margin:0 14px!important}
+  .emi-hero-ticks{gap:30px!important;top:16px!important}
+  .emi-hero-ticks>span{height:12px!important}
+  .emi-hero-ticks>span:nth-child(3){height:17px!important}
+  /* The antenna is a CSS triangle, so its "borders" are geometry, not a rule. */
+  .emi-hero-ant{top:33px!important;border-left:7px solid transparent!important;border-right:7px solid transparent!important;border-top:10px solid #fff!important}
+  .emi-hero-ep{right:34px!important;gap:6px!important}
+  .emi-hero-ep>span{width:12px!important;height:46px!important}
+  .emi-hero-copy{margin-top:14px!important}
+  .emi-hero-copy>div:first-child{font-size:38px!important;letter-spacing:-0.025em!important}
+  .emi-hero-copy>div:last-child{font-size:15px!important;margin-top:7px!important}
+  .emi-hero-stats>div:first-child>div:first-child>span:last-child,
+  .emi-hero-stats>div:last-child>div:first-child{font-size:34px!important}
+  .emi-hero-stats>div:first-child>div:first-child>span:first-child{width:9px!important;height:9px!important}
+  /* The extra height also buys the action row a bigger tap target and label. */
+  .emi-h-focus{padding:22px 24px!important;gap:20px!important}
+  .emi-h-focus>span:first-child{width:60px!important;height:60px!important;border-radius:20px!important}
+  .emi-h-focus>span:first-child>svg{width:30px!important;height:30px!important}
+  .emi-h-focus>div>div:nth-child(2){font-size:22px!important;margin-top:4px!important}
+  .emi-h-focus>div>div:nth-child(3){height:8px!important;margin-top:14px!important}
+  .emi-h-focus>span:last-child{font-size:15px!important;padding:15px 30px!important;border-radius:16px!important}
+}
+
+/* ── iPad portrait: the same glance surface, turned ninety degrees ───────────
+   A portrait iPad has more height than the six blocks need, so the scrolling
+   two-column layout ended two thirds of the way down a 1366pt screen and left
+   the rest empty — the same defect as the old landscape dashboard, just lower
+   on the page. Here Start fits the viewport as well:
+     row 1  hero          (takes all the slack)
+     row 2  Weakest area  (natural height, full width)
+     row 3  Activity | Leaderboard
+     row 4  Currency | Fleet
+   The hero takes the slack alone. Splitting it with the card rows was tried
+   and it stretched the activity card to 426px around 250px of content, which
+   opened a hole between the heat map and the card's bottom edge — the same
+   hollow-card failure as the old landscape layout, one level down. A card
+   should be the height of what is in it; the hero is the only block on this
+   screen that genuinely reads better larger.
+
+   min-height 1000 covers every portrait iPad — a mini is 1133, an 11" is 1194,
+   a 13" is 1366 — while a phone in landscape, or an iPad window too short to
+   seat all four rows, keeps the scrolling layout. The budget: 82px header,
+   32px padding, ~110px for row 2, ~300px for row 3, ~220px for row 4 and 48px
+   of gaps leaves the hero 341px on a mini and 574px on a 13", both well clear
+   of its 280px floor. */
+@media (min-width:700px) and (min-height:1000px) and (orientation:portrait){
+  .emi-dash{
+    overflow:hidden!important;
+    grid-template-rows:minmax(280px,1fr) auto auto auto!important;
+    gap:16px!important;
+    padding:12px 32px 20px!important;
+  }
+  .emi-dash>:first-child{height:auto!important}
+  /* Only the last row is levelled: Fleet is ~70px taller than Currency, and
+     that difference lands on the bottom edge of the screen where it reads as a
+     ragged finish. Currency spends it on a taller bar and a pinned legend. */
+  .emi-h-currency,.emi-h-fleet,.emi-h-activity{align-self:stretch;display:flex;flex-direction:column;min-height:0}
+  .emi-h-currency>div:last-child,.emi-h-fleet>div:last-child,.emi-h-activity>div:last-child{
+    flex:1;min-height:0;display:flex;flex-direction:column;
+  }
+  .emi-h-currency>div:last-child>*:last-child,
+  .emi-h-activity>div:last-child>*:last-child{margin-top:auto!important}
+  .emi-h-currency .emi-cbar{height:14px!important}
+  .emi-h-currency .emi-cmark{height:22px!important;top:-4px!important}
+  .emi-h-focus{align-self:stretch!important;border-radius:20px!important}
 }
 </style>
 </helmet>
@@ -264,53 +414,53 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
        out around it instead of on top of it — so it reads as a background, not
        as clutter behind the words. Still flips to the profile; the circular
        arrow says so. -->
-  <div onClick="{{ flipHome }}" style="perspective:1400px;flex:none;height:232px;cursor:pointer">
+  <div onClick="{{ flipHome }}" class="emi-hero" style="perspective:1400px;flex:none;height:232px;cursor:pointer">
   <div style="position:relative;width:100%;height:100%;transition:transform 0.6s cubic-bezier(0.4,0.2,0.2,1);transform-style:preserve-3d;transform:{{ homeFlipTransform }}">
-  <div style="position:absolute;inset:0;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(14,78,168,0.7);backface-visibility:hidden;-webkit-backface-visibility:hidden;pointer-events:{{ frontPE }};display:flex;flex-direction:column;padding:44px 18px 16px;box-sizing:border-box">
+  <div class="emi-hero-face" style="position:absolute;inset:0;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px -24px rgba(14,78,168,0.7);backface-visibility:hidden;-webkit-backface-visibility:hidden;pointer-events:{{ frontPE }};display:flex;flex-direction:column;padding:44px 18px 16px;box-sizing:border-box">
     <div style="position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(180deg,#0E4EA8 0%,#1466D6 62%,#4C93EF 100%);pointer-events:none"></div>
     <div style="position:absolute;left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,#232E38 0%,#33414D 100%);pointer-events:none"></div>
-    <div style="position:absolute;left:0;right:0;top:60%;height:1.5px;background:rgba(255,255,255,0.92);box-shadow:0 0 8px rgba(255,255,255,0.4);pointer-events:none"></div>
+    <div class="emi-hero-horizon" style="position:absolute;left:0;right:0;top:60%;height:1.5px;background:rgba(255,255,255,0.92);box-shadow:0 0 8px rgba(255,255,255,0.4);pointer-events:none"></div>
     <!-- Attitude ladder, centred on the horizon. -->
-    <div style="position:absolute;left:50%;top:60%;transform:translateX(-50%);pointer-events:none">
+    <div class="emi-hero-ladder" style="position:absolute;left:50%;top:60%;transform:translateX(-50%);pointer-events:none">
       <span style="display:block;width:26px;height:1px;background:rgba(255,255,255,0.55);margin:0 auto 16px"></span>
       <span style="display:block;width:44px;height:1px;background:rgba(255,255,255,0.55);margin:0 auto 16px"></span>
       <span style="display:block;width:26px;height:1px;background:rgba(255,255,255,0.35);margin:16px auto 0"></span>
       <span style="display:block;width:44px;height:1px;background:rgba(255,255,255,0.35);margin:16px auto 0"></span>
     </div>
     <!-- Window ticks + antenna, hanging in the clear band above the copy. -->
-    <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:16px;align-items:flex-start;pointer-events:none">
+    <div class="emi-hero-ticks" style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;gap:16px;align-items:flex-start;pointer-events:none">
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
       <span style="width:1px;height:10px;background:#fff"></span>
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
       <span style="width:1px;height:7px;background:rgba(255,255,255,0.55)"></span>
     </div>
-    <span style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #fff;pointer-events:none"></span>
+    <span class="emi-hero-ant" style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid #fff;pointer-events:none"></span>
     <!-- Captain's epaulettes. -->
-    <div style="position:absolute;top:0;right:18px;display:flex;gap:4px;pointer-events:none">
+    <div class="emi-hero-ep" style="position:absolute;top:0;right:18px;display:flex;gap:4px;pointer-events:none">
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
       <span style="width:9px;height:34px;background:linear-gradient(180deg,#F7CE5A 0%,#D99B1C 100%);border-radius:0 0 1px 1px;box-shadow:0 1px 3px rgba(6,36,80,0.35)"></span>
     </div>
     <!-- Amber wing symbol sitting on the horizon. -->
-    <div style="position:absolute;top:60%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;pointer-events:none">
+    <div class="emi-hero-wing" style="position:absolute;top:60%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;pointer-events:none">
       <span style="width:34px;height:3px;background:#E7A614;border-radius:4px;box-shadow:0 0 0 1px rgba(19,26,33,0.35)"></span>
       <span style="width:7px;height:7px;background:#E7A614;border-radius:50%;margin:0 8px;box-shadow:0 0 0 1px rgba(19,26,33,0.35)"></span>
       <span style="width:34px;height:3px;background:#E7A614;border-radius:4px;box-shadow:0 0 0 1px rgba(19,26,33,0.35)"></span>
     </div>
-    <div style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div class="emi-hero-badge" style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px">
       <span style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.22);border-radius:999px;padding:5px 11px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#fff"><span style="width:6px;height:6px;border-radius:50%;background:#5BE49B;box-shadow:0 0 0 3px rgba(91,228,155,0.28)"></span>Ready for briefing</span>
     </div>
     <!-- Copy stops short of the horizon so the wing symbol never touches it. -->
-    <div style="position:relative;margin-top:10px">
+    <div class="emi-hero-copy" style="position:relative;margin-top:10px">
       <div style="font-family:'Inter',sans-serif;font-weight:600;font-size:25px;letter-spacing:-0.02em;color:#fff;line-height:1.1;text-shadow:0 1px 12px rgba(6,36,80,0.35)">All set, {{ userName }}.</div>
       <div style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.86);margin-top:5px">Next check in 96 days</div>
     </div>
     <!-- The two numbers sit in the outer corners, not side by side: the attitude
          ladder owns the centre column, and no panel goes behind them — the
          instrument band is already a flat, quiet surface. -->
-    <div style="position:relative;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+    <div class="emi-hero-stats" style="position:relative;margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
       <div onClick="{{ openStatsHero }}" style="cursor:pointer">
         <div style="display:flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;flex:none;background:{{ fitnessColor }};box-shadow:0 0 0 2.5px rgba(255,255,255,0.22)"></span><span style="font-family:'Inter',sans-serif;font-weight:700;font-size:26px;line-height:1;color:#fff">{{ fitnessPct }}</span></div>
         <div style="font-family:'Inter',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.75);margin-top:6px">Competency</div>
@@ -385,12 +535,12 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
         <span style="flex:none;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:#17A673;background:#E7F6EF;border-radius:999px;padding:5px 12px">Current</span>
       </div>
       <div style="position:relative">
-        <div style="display:flex;height:10px;border-radius:999px;overflow:hidden">
+        <div class="emi-cbar" style="display:flex;height:10px;border-radius:999px;overflow:hidden">
           <div style="width:22%;background:#E4483B"></div>
           <div style="width:33%;background:#EBB236;border-left:2px solid #fff;border-right:2px solid #fff"></div>
           <div style="flex:1;background:#37A56A"></div>
         </div>
-        <span style="position:absolute;top:-4px;left:72%;transform:translateX(-50%);width:4px;height:18px;border-radius:999px;background:#fff;box-shadow:0 0 0 2px #131A21"></span>
+        <span class="emi-cmark" style="position:absolute;top:-4px;left:72%;transform:translateX(-50%);width:4px;height:18px;border-radius:999px;background:#fff;box-shadow:0 0 0 2px #131A21"></span>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:16px;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;color:#5A6672">
         <span style="display:flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:2px;background:#E4483B"></span>Under 3</span>
