@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-11T00:00:00Z",
+  "title": "Design System: Easy Memory Item",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Brand",
+        "canonical": "#1466D6",
+        "tonalRamp": ["#062450", "#093067", "#0B3F87", "#0E4EA8", "#1466D6", "#4C93EF", "#AAC6E0", "#EAF0FA"]
+      },
+      "brand-deep": {
+        "role": "primary",
+        "displayName": "Brand Deep",
+        "canonical": "#0E4EA8",
+        "tonalRamp": ["#05204A", "#082B5F", "#0A3A80", "#0C449A", "#0E4EA8", "#2F73C6", "#8FB4DE", "#E4EDF8"]
+      },
+      "brand-lift": {
+        "role": "primary",
+        "displayName": "Brand Lift",
+        "canonical": "#4C93EF",
+        "tonalRamp": ["#0B2A50", "#123C71", "#1A5296", "#2A6BBE", "#3B80DA", "#4C93EF", "#9CC3F6", "#EAF2FE"]
+      },
+      "brand-tint": {
+        "role": "primary",
+        "displayName": "Brand Tint",
+        "canonical": "#EAF0FA",
+        "tonalRamp": ["#1E2A3A", "#2E4056", "#425873", "#5C7391", "#7B90AB", "#A4B5CB", "#CEDDEE", "#EAF0FA"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#131A21",
+        "tonalRamp": ["#080B0E", "#131A21", "#252E38", "#3B4652", "#5A6672", "#8A97A4", "#C2C9D1", "#ECEFF3"]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#5A6672",
+        "tonalRamp": ["#0F141A", "#1C242C", "#2C3640", "#414D59", "#5A6672", "#8A97A4", "#C2C9D1", "#EEF1F4"]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "#8A97A4",
+        "tonalRamp": ["#141A20", "#232C35", "#36414C", "#4C5866", "#67747F", "#8A97A4", "#C2C9D1", "#F0F2F5"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "canonical": "#DDE2E8",
+        "tonalRamp": ["#1A1F25", "#2C333A", "#434B54", "#5D6670", "#7C858F", "#A5ADB6", "#DDE2E8", "#F5F7F9"]
+      },
+      "line-soft": {
+        "role": "neutral",
+        "displayName": "Line Soft",
+        "canonical": "#ECEFF3",
+        "tonalRamp": ["#1B2026", "#2E353C", "#454D56", "#606972", "#828B95", "#AEB6C0", "#ECEFF3", "#F9FAFB"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#262626", "#404040", "#5C5C5C", "#7A7A7A", "#999999", "#C4C4C4", "#E8E8E8", "#FFFFFF"]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas",
+        "canonical": "#EEF1F4",
+        "tonalRamp": ["#1C2126", "#2F363D", "#464E56", "#616A73", "#838C96", "#AFB7C0", "#EEF1F4", "#FAFBFC"]
+      },
+      "hover": {
+        "role": "neutral",
+        "displayName": "Hover",
+        "canonical": "#F7F9FB",
+        "tonalRamp": ["#1D2227", "#30373E", "#474F57", "#626B74", "#848D97", "#B0B8C1", "#F7F9FB", "#FDFEFE"]
+      },
+      "inset": {
+        "role": "neutral",
+        "displayName": "Inset",
+        "canonical": "#F2F3F5",
+        "tonalRamp": ["#1C2025", "#2F343A", "#464C53", "#616770", "#838A93", "#AFB5BD", "#F2F3F5", "#FBFBFC"]
+      },
+      "tint-cool": {
+        "role": "neutral",
+        "displayName": "Tint Cool",
+        "canonical": "#EFF3F7",
+        "tonalRamp": ["#1B2128", "#2E3740", "#454F5A", "#606B78", "#828E9C", "#AEB9C5", "#EFF3F7", "#FAFCFD"]
+      },
+      "ok": {
+        "role": "secondary",
+        "displayName": "OK",
+        "canonical": "#17A673",
+        "tonalRamp": ["#052419", "#083A28", "#0B523A", "#0F7A50", "#17A673", "#37C494", "#8CDDBD", "#E4F7EF"]
+      },
+      "caution": {
+        "role": "secondary",
+        "displayName": "Caution",
+        "canonical": "#EBB236",
+        "tonalRamp": ["#3A2A05", "#573F08", "#7A590C", "#A67A12", "#C8892B", "#EBB236", "#F5D68C", "#FDF4DE"]
+      },
+      "alert": {
+        "role": "secondary",
+        "displayName": "Alert",
+        "canonical": "#E4483B",
+        "tonalRamp": ["#3A0F0B", "#571712", "#7A211A", "#A62D24", "#C93A2E", "#E4483B", "#F09A91", "#FCE9E7"]
+      },
+      "rank-gold": {
+        "role": "tertiary",
+        "displayName": "Rank Gold",
+        "canonical": "#E7A614",
+        "tonalRamp": ["#3A2903", "#573E05", "#7A5708", "#A6760C", "#D99B1C", "#E7A614", "#F5D276", "#FDF3D6"]
+      },
+      "rank-bronze": {
+        "role": "tertiary",
+        "displayName": "Rank Bronze",
+        "canonical": "#C08457",
+        "tonalRamp": ["#301D0F", "#472B17", "#633D20", "#85532C", "#A66B3C", "#C08457", "#DDB694", "#F6ECE2"]
+      }
+    },
+    "typographyMeta": {
+      "fs-3xl": { "displayName": "Screen Title", "purpose": "The screen title, once per screen, top-left. Ink, -0.02em." },
+      "fs-2xl": { "displayName": "Statistic", "purpose": "Large numerals — a proficiency percentage, a streak count." },
+      "fs-xl":  { "displayName": "Card Title", "purpose": "Card titles and section heads inside a screen." },
+      "fs-lg":  { "displayName": "Workhorse", "purpose": "Checklist item labels, list-row primaries, full-width button labels." },
+      "fs-md":  { "displayName": "Body", "purpose": "Descriptive text and secondary rows." },
+      "fs-sm":  { "displayName": "Meta", "purpose": "Metadata, checklist responses, chip text. The most-used size in the app." },
+      "fs-xs":  { "displayName": "Dense Meta", "purpose": "Dense secondary metadata, tab and rail labels." },
+      "fs-2xs": { "displayName": "Eyebrow", "purpose": "Smallest uppercase status labels, 0.14em tracked, weight 700." }
+    },
+    "shadows": [
+      { "name": "sh-1", "value": "0 1px 2px rgba(19,26,33,0.03)", "purpose": "The default on every resting white surface (41 uses). A border-softener, not a lift. Pairs with the 1px #DDE2E8 border; neither is optional." },
+      { "name": "sh-2", "value": "0 14px 34px -20px rgba(19,26,33,0.40)", "purpose": "Raised cards and floating clusters sitting above a scrolling list." },
+      { "name": "sh-3", "value": "0 24px 56px -20px rgba(19,26,33,0.45)", "purpose": "Completion cards, result sheets, and modals overlaying content." },
+      { "name": "canvas-lift", "value": "0 10px 26px -16px rgba(19,26,33,0.22)", "purpose": "Replaces sh-1 on cards at canvas (iPad) width, where the larger surface can carry it." },
+      { "name": "hero-bloom", "value": "0 18px 40px -24px rgba(14,78,168,0.7)", "purpose": "Under blue gradient hero cards only. Tinted with the brand blue, not neutral." },
+      { "name": "cta-lift", "value": "0 10px 22px -12px rgba(14,78,168,0.8)", "purpose": "Under full-width primary buttons only." },
+      { "name": "glass", "value": "0 14px 34px -10px rgba(19,26,33,0.34), 0 2px 8px rgba(19,26,33,0.08), inset 0 1px 0 rgba(255,255,255,0.6)", "purpose": "The tab bar and search button. The inset top highlight is what makes the glass read as glass; never drop it." },
+      { "name": "pill-sheen", "value": "inset 0 1px 0 rgba(255,255,255,0.28)", "purpose": "A subtle top highlight on filled pill buttons." }
+    ],
+    "motion": [
+      { "name": "state-fade", "value": "background 0.18s", "purpose": "Every hover and active-state colour change: buttons, tab items, rows. The system default." },
+      { "name": "progress-fill", "value": "width 0.25s ease", "purpose": "Checklist and quiz progress bars advancing." },
+      { "name": "card-flip", "value": "transform 0.6s cubic-bezier(0.4,0.2,0.2,1)", "purpose": "The home hero card's 3D flip. The only large motion in the system." },
+      { "name": "list-follow", "value": "scrollTo({ behavior: 'smooth' })", "purpose": "Auto-centring the current checklist item as the pilot advances." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "0px" },
+      { "name": "canvas", "value": "700px" },
+      { "name": "canvas-wide", "value": "1100px" },
+      { "name": "ipad-pro-landscape", "value": "1180px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Full-width commit action — Check, Complete, Start. Brand blue, no transform on hover.",
+      "html": "<button class=\"ds-btn-primary\">Check</button>",
+      "css": ".ds-btn-primary { font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: #fff; background: #1466D6; border: none; border-radius: 16px; padding: 16px 24px; cursor: pointer; box-shadow: 0 10px 22px -12px rgba(14,78,168,0.8); transition: background 0.18s; } .ds-btn-primary:hover { background: #0E4EA8; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 10px 22px -12px rgba(14,78,168,0.8), 0 0 0 3px rgba(20,102,214,0.24); } .ds-btn-primary:active { background: #0E4EA8; }"
+    },
+    {
+      "name": "Primary Pill Button",
+      "kind": "button",
+      "refersTo": "button-primary-pill",
+      "description": "Inline action inside a card or result sheet — Run again, Invite buddy, Join. Carries a top sheen.",
+      "html": "<button class=\"ds-btn-pill\">Run again</button>",
+      "css": ".ds-btn-pill { font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; color: #fff; background: #1466D6; border: none; border-radius: 999px; padding: 10px 18px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28); transition: background 0.18s; } .ds-btn-pill:hover { background: #0E4EA8; } .ds-btn-pill:focus-visible { outline: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 0 0 3px rgba(20,102,214,0.24); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The paired alternative to a primary — Skip, Back, Cancel. White on a hairline border.",
+      "html": "<button class=\"ds-btn-secondary\">Skip</button>",
+      "css": ".ds-btn-secondary { font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: #131A21; background: #fff; border: 1px solid #DDE2E8; border-radius: 16px; padding: 16px 24px; cursor: pointer; box-shadow: 0 1px 2px rgba(19,26,33,0.03); transition: background 0.18s; } .ds-btn-secondary:hover { background: #F7F9FB; } .ds-btn-secondary:focus-visible { outline: none; border-color: #1466D6; box-shadow: 0 0 0 3px rgba(20,102,214,0.16); }"
+    },
+    {
+      "name": "Phase Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Horizontal phase/filter selector above a checklist. Selected fills Brand. Hit area extended to 44px.",
+      "html": "<div class=\"ds-chiprow\"><span class=\"ds-chip ds-chip-on\">Before Start</span><span class=\"ds-chip\">After Start</span><span class=\"ds-chip\">Before Takeoff</span></div>",
+      "css": ".ds-chiprow { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 8px 0; } .ds-chiprow::-webkit-scrollbar { display: none; } .ds-chip { position: relative; flex: none; font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; color: #5A6672; background: #fff; border: 1px solid #DDE2E8; border-radius: 999px; padding: 7px 13px; white-space: nowrap; cursor: pointer; transition: background 0.18s; } .ds-chip::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); height: 44px; } .ds-chip:hover { background: #F7F9FB; } .ds-chip-on { color: #fff; background: #1466D6; border-color: #1466D6; } .ds-chip-on:hover { background: #0E4EA8; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The resting surface for everything: white, hairline border, sh-1. 16px radius, 16px padding.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-eyebrow\">Weakest area</div><div class=\"ds-card-title\">Limitations</div><div class=\"ds-card-body\">18% proficiency · last reviewed 9 days ago</div></div>",
+      "css": ".ds-card { background: #fff; border: 1px solid #DDE2E8; border-radius: 16px; padding: 16px; box-shadow: 0 1px 2px rgba(19,26,33,0.03); font-family: Inter, sans-serif; } .ds-card-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5A6672; } .ds-card-title { font-size: 18px; font-weight: 600; line-height: 1.15; letter-spacing: -0.015em; color: #131A21; margin-top: 6px; } .ds-card-body { font-size: 12px; font-weight: 600; color: #8A97A4; margin-top: 4px; }"
+    },
+    {
+      "name": "Hero Card",
+      "kind": "card",
+      "refersTo": "card-canvas",
+      "description": "The one gradient surface — the home hero. Blue bloom shadow, no border, white content.",
+      "html": "<div class=\"ds-hero\"><div class=\"ds-hero-eyebrow\">A320neo · Type rating</div><div class=\"ds-hero-title\">Welcome on Board</div><div class=\"ds-hero-sub\">Ready when you are.</div></div>",
+      "css": ".ds-hero { position: relative; background: linear-gradient(160deg,#0E4EA8 0%,#1466D6 70%,#4C93EF 100%); border-radius: 20px; padding: 24px; color: #fff; box-shadow: 0 18px 40px -24px rgba(14,78,168,0.7); font-family: Inter, sans-serif; } .ds-hero-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.75); } .ds-hero-title { font-size: 25px; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; margin-top: 8px; } .ds-hero-sub { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: rgba(255,255,255,0.85); margin-top: 4px; }"
+    },
+    {
+      "name": "Checklist Row",
+      "kind": "custom",
+      "refersTo": "checklist-row",
+      "description": "The signature component. Checkbox, label left, response right — nothing between them.",
+      "html": "<div class=\"ds-clstack\"><div class=\"ds-clrow ds-clrow-done\"><span class=\"ds-clbox ds-clbox-on\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"ds-cllabel\">cockpit prep</span><span class=\"ds-clresp\">completed</span></div><div class=\"ds-clrow\"><span class=\"ds-clbox\"></span><span class=\"ds-cllabel\">gear pins and covers</span><span class=\"ds-clresp\">removed</span></div><div class=\"ds-clrow\"><span class=\"ds-clbox\"></span><span class=\"ds-cllabel\">signs</span><span class=\"ds-clresp\">on/auto</span></div></div>",
+      "css": ".ds-clstack { display: flex; flex-direction: column; gap: 10px; font-family: Inter, sans-serif; } .ds-clrow { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid #DDE2E8; border-radius: 16px; padding: 16px; cursor: pointer; box-shadow: 0 1px 2px rgba(19,26,33,0.03); transition: background 0.18s; } .ds-clrow:hover { background: #F7F9FB; } .ds-clbox { width: 26px; height: 26px; flex: none; border-radius: 8px; border: 1.8px solid #C2C9D1; background: #fff; display: flex; align-items: center; justify-content: center; } .ds-clbox-on { border-color: #1466D6; background: #1466D6; } .ds-cllabel { flex: 1; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: #131A21; text-transform: capitalize; } .ds-clresp { font-size: 12px; font-weight: 600; color: #5A6672; text-align: right; flex: none; } .ds-clrow-done .ds-clresp { color: #17A673; }"
+    },
+    {
+      "name": "Progress Track",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "The checklist and quiz progress bar. 6px tall, r-xs radius, Brand fill.",
+      "html": "<div class=\"ds-track\"><div class=\"ds-track-fill\"></div></div>",
+      "css": ".ds-track { height: 6px; border-radius: 4px; background: #ECEFF3; overflow: hidden; } .ds-track-fill { height: 100%; border-radius: 4px; background: #1466D6; width: 62%; transition: width 0.25s ease; }"
+    },
+    {
+      "name": "Glass Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-item",
+      "description": "The one glass element in the system. Floating capsule plus a detached circular search button.",
+      "html": "<div class=\"ds-tabwrap\"><div class=\"ds-tabbar\"><div class=\"ds-tab ds-tab-on\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10\"></path></svg><span>Start</span></div><div class=\"ds-tab\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 12l20-6-6 20-4-8-8-4-2-2z\"></path></svg><span>Flight</span></div><div class=\"ds-tab\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 5a2 2 0 012-2h11v16H6a2 2 0 00-2 2V5z\"></path><path d=\"M17 3v16\"></path></svg><span>Learn</span></div></div><div class=\"ds-tabsearch\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"></circle><path d=\"M21 21l-4.3-4.3\"></path></svg><span>Search</span></div></div>",
+      "css": ".ds-tabwrap { display: flex; justify-content: center; align-items: center; gap: 10px; padding: 20px 14px; font-family: Inter, sans-serif; } .ds-tabbar { display: flex; gap: 2px; width: 239px; height: 53px; justify-content: space-around; box-sizing: border-box; background: rgba(255,255,255,0.62); backdrop-filter: blur(26px) saturate(180%); -webkit-backdrop-filter: blur(26px) saturate(180%); border: 1px solid rgba(255,255,255,0.75); border-radius: 28px; padding: 6px; box-shadow: 0 14px 34px -10px rgba(19,26,33,0.34), 0 2px 8px rgba(19,26,33,0.08), inset 0 1px 0 rgba(255,255,255,0.6); } .ds-tab { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; color: #5A6672; padding: 7px 15px; border-radius: 22px; transition: background 0.18s, color 0.18s; } .ds-tab span { font-size: 11px; font-weight: 600; letter-spacing: 0.01em; } .ds-tab:hover { background: rgba(255,255,255,0.5); } .ds-tab-on { color: #1466D6; background: #fff; } .ds-tabsearch { flex: none; width: 66px; height: 62px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; color: #5A6672; background: rgba(255,255,255,0.62); backdrop-filter: blur(26px) saturate(180%); -webkit-backdrop-filter: blur(26px) saturate(180%); border: 1px solid rgba(255,255,255,0.75); box-shadow: 0 14px 34px -10px rgba(19,26,33,0.34), 0 2px 8px rgba(19,26,33,0.08), inset 0 1px 0 rgba(255,255,255,0.6); transition: background 0.18s, color 0.18s; } .ds-tabsearch span { font-size: 11px; font-weight: 600; letter-spacing: 0.01em; } .ds-tabsearch:hover { color: #1466D6; background: rgba(255,255,255,0.8); }"
+    },
+    {
+      "name": "Search Result Row",
+      "kind": "input",
+      "refersTo": "icon-tile",
+      "description": "The search surface's result row: 30px icon tile, primary label, muted category.",
+      "html": "<div class=\"ds-srow\"><span class=\"ds-stile\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 11l3 3L22 4\"></path><path d=\"M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11\"></path></svg></span><div class=\"ds-stext\"><div class=\"ds-slabel\">Emergency Descent</div><div class=\"ds-scat\">Memory Items · checklist</div></div></div>",
+      "css": ".ds-srow { display: flex; align-items: center; gap: 12px; padding: 9px; border-radius: 8px; cursor: pointer; font-family: Inter, sans-serif; transition: background 0.18s; } .ds-srow:hover { background: #F2F3F5; } .ds-stile { width: 30px; height: 30px; border-radius: 8px; flex: none; display: flex; align-items: center; justify-content: center; background: #EFF3F7; color: #1466D6; } .ds-stext { flex: 1; min-width: 0; } .ds-slabel { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: #131A21; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ds-scat { font-size: 11px; font-weight: 600; color: #8A97A4; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Flight Deck Companion",
+    "overview": "EMI is not an instrument and not a game. It is a calm, professional colleague who happens to know the aircraft cold. That single idea resolves every tension in the system: the app speaks in a human voice — \"Welcome on Board\", \"Ready when you are\" — while every mechanism underneath it behaves with the exactness a checklist demands. Warmth in the copy and the corners; zero ambiguity in the controls.\n\nMaterially, the world is a cool grey airframe field (#EEF1F4) carrying white panels held down by a hairline border rather than a shadow. This inversion — grey ground, white content — is the system's core material idea and the thing most likely to be undone by accident, since almost every UI kit assumes the opposite. Type is Inter, almost universally at weight 600: 210 uses against 9 of weight 500. Regular-weight body text does not exist here. It reads as steady rather than shouty because the sizes stay small (11–15px for everything but titles) and the hierarchy is carried by a three-step ink ramp — #131A21 → #5A6672 → #8A97A4 — instead of by weight contrast. One blue carries every interactive affordance. Green, amber and red appear only as readouts of real state.\n\nThe single piece of theatre in the whole system is the floating tab bar: a liquid-glass capsule with blur(26px) saturate(180%), a translucent white fill, and a genuinely deep shadow, riding above a masked blur gradient. It is the one element allowed to feel like hardware. Everything else stays flat and printed, which is exactly what makes it work.\n\nThe confirmed anti-reference is the consumer gamified study app. EMI has streaks, achievements, ranks and a leaderboard, and none of them may drift toward mascots, confetti, bouncy oversized shapes, or a candy palette. Gamification here is presented the way an airline presents currency and recency: as a professional record.\n\nThe product is built on HeroUI. heroui.theme.ts at the project root is the normative theme override — it maps every token onto HeroUI's model and marks each deliberate divergence from HeroUI's defaults with its reason.",
+    "keyCharacteristics": [
+      "Cool grey field, white panels, hairline borders — depth is earned, not applied",
+      "Inter semibold as the resting weight; hierarchy carried by size and a three-step ink ramp",
+      "One blue for every live control; semantic colour reserved for real state",
+      "Warm, human copy over instrument-grade mechanics",
+      "Exactly one glass element — the floating tab bar — and nothing else imitates it",
+      "16 is the system number: 16px radius, 16px padding, 16px gutter",
+      "Aviation content typeset with checklist discipline: label left, response right"
+    ],
+    "rules": [
+      { "name": "The One Blue Rule", "body": "#1466D6 means \"this is interactive\" and means nothing else. Never use it as a decorative fill, a heading colour, or a brand flourish on a non-control. When a screen looks flat and needs energy, the answer is hierarchy, not more blue.", "section": "colors" },
+      { "name": "The Earned Colour Rule", "body": "OK, Caution and Alert are readouts of real state — a checklist completed, a proficiency band, an answer graded. Never use a semantic colour to categorise, to decorate, or to add variety to a list.", "section": "colors" },
+      { "name": "The Flat Field Rule", "body": "#EEF1F4 is never gradient-filled, and it is the page background rather than white. Floating footers mask to that exact value; any gradient behind them renders as a visible band. A UI kit that assumes a white background must be overridden, not accommodated.", "section": "colors" },
+      { "name": "The Semibold Default Rule", "body": "Inter 600 is the resting weight. 700 is reserved for uppercase status labels and rank numerals; 500 appears only on the widest-tracked eyebrows. Do not introduce 400 body text — it reads as a different product. Note this inverts the usual convention: emphasis is achieved by size and ink, never by going bolder.", "section": "typography" },
+      { "name": "The Checklist Typesetting Rule", "body": "A procedure line is always label left, response right, nothing between them. The label is fs-lg/600/Ink and capitalized; the response is fs-sm/600, right-aligned, coloured by state. Never centre a checklist line, never put the response on a second row, and never restyle the response to match the label.", "section": "typography" },
+      { "name": "The Verbatim Content Rule", "body": "Aviation strings are set exactly as written — V1, VR, V2 / FLEX; max +54 °C · min −43 °C; SOP 5.02. Never sentence-case, expand, re-space, or \"clean up\" a procedure string, a limitation value, or an SOP number for visual rhythm.", "section": "typography" },
+      { "name": "The Glance Surface Rule", "body": "On the iPad Pro landscape canvas, Start must fit the viewport. If content is added to that dashboard, something else gives up space — the user never scrolls to reach the leaderboard.", "section": "layout" },
+      { "name": "The Rail Replaces the Bar Rule", "body": "The glass tab bar and the left rail are the same navigation in two forms; they never appear together, and the rail carries the brand mark so the header drops its logo.", "section": "layout" },
+      { "name": "The 44 Rule", "body": "Nothing tappable is smaller than 44px of hit area. When the design calls for a visually small control, extend the target with .emi-tap; never shrink the target to match the paint.", "section": "layout" },
+      { "name": "The Earned Shadow Rule", "body": "A shadow deeper than sh-1 requires the element to actually float above content. If it sits in the flow, it gets a border and sh-1 — no exceptions for emphasis. HeroUI's shadow-small is roughly twice sh-1's weight; using it on cards would quietly undo this rule across all 41 resting surfaces.", "section": "elevation" },
+      { "name": "The One Glass Element Rule", "body": "Full backdrop blur belongs to the navigation cluster alone (blur(26px) saturate(180%)). Lighter blurs exist only as scrim and mask layers behind floating content. No card, sheet, modal or header may use a glass treatment; the tab bar's distinctiveness depends on being the only one.", "section": "elevation" },
+      { "name": "The Radius Ladder Rule", "body": "4 · 8 · 12 · 16 · 20 · 28 · 999. Pick from the ladder; don't interpolate a new value because a component \"looks slightly off\". Note that 14px — HeroUI's large default — is not on this ladder; the override in heroui.theme.ts is what keeps it off.", "section": "shapes" },
+      { "name": "The Position Follows the Pilot Rule", "body": "In any procedure list, the app keeps the current item centred. Never make the user scroll to find where they are in a checklist.", "section": "components" }
+    ],
+    "dos": [
+      "Do start from heroui.theme.ts. It is the normative mapping of these tokens onto HeroUI, and its four marked overrides — inverted background, opaque divider, 16px large radius, lighter shadow scale — are load-bearing.",
+      "Do use #1466D6 for interactivity and nothing else; hover to #0E4EA8 over 0.18s with no transform.",
+      "Do give every resting white surface both a 1px solid #DDE2E8 border and sh-1 — they are one treatment.",
+      "Do pick radii from the ladder (4 · 8 · 12 · 16 · 20 · 28 · 999) and default to 16px, with 16px padding to match.",
+      "Do set procedure lines as label-left / response-right, and reproduce every aviation string verbatim, including spacing, symbols and SOP numbering.",
+      "Do keep Inter 600 as the resting weight and carry hierarchy in size and the ink ramp (#131A21 → #5A6672 → #8A97A4).",
+      "Do change layout shape at canvas width — rail instead of tab bar, grid instead of column, 32px gutters, 20px card radius — rather than stretching phone layouts.",
+      "Do guarantee 44px of hit area on every control, using .emi-tap when the visual box is smaller.",
+      "Do keep the current checklist item scrolled to centre."
+    ],
+    "donts": [
+      "Don't drift toward the consumer gamified study app. Streaks, ranks, medals and achievements stay in the professional register — no mascots, no confetti, no bouncy oversized shapes, no candy palette.",
+      "Don't let HeroUI's defaults through unexamined: a white background, a translucent divider, a 14px large radius, or shadow-small on a card each break a named rule above.",
+      "Don't apply a glass treatment to anything but the navigation cluster.",
+      "Don't use a shadow deeper than sh-1 on an element that sits in the content flow.",
+      "Don't use OK, Caution or Alert for categorisation, variety or emphasis — only as a readout of real state.",
+      "Don't introduce Inter 400, a second typeface, or an italic. Emphasis comes from size and ink, never from a heavier weight.",
+      "Don't invent, round, or reformat a limitation value, checklist response, or SOP number to improve visual rhythm. Content accuracy outranks layout.",
+      "Don't render navigation as icons without labels at any breakpoint.",
+      "Don't add a network-dependent asset — no CDN font, script, icon set or image. Everything ships vendored and works offline.",
+      "Don't treat EMI Prototype v2.dc.html as current. index.html is the deployed app and the design authority; the source file has not been updated since 2026-07-21 and its values are stale. Bump CACHE_VERSION in sw.js with every change to index.html."
+    ]
+  }
+}
