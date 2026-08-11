@@ -388,4 +388,4 @@ The current row is tracked via `data-cur` and auto-scrolled to the vertical cent
 - **Don't** invent, round, or reformat a limitation value, checklist response, or SOP number to improve visual rhythm. Content accuracy outranks layout.
 - **Don't** render navigation as icons without labels at any breakpoint.
 - **Don't** add a network-dependent asset — no CDN font, script, icon set or image. Everything ships vendored and works offline.
-- **Don't** hand-edit `EMI Prototype v2.dc.html`. `index.html` is the deployed app and the design authority; `.dc.html` is regenerated from it (procedure in the README) and the two share an identical body. Editing it directly is what caused the last divergence. Bump `CACHE_VERSION` in `sw.js` with every change to `index.html`.
+- **Don't** create a second copy of the app to edit. `index.html` is the deployed app and the design authority; a parallel Claude Design export used to exist, drifted, and was mistaken for the authority — it has been deleted. Generate an export on demand instead (procedure in the README). Bump `CACHE_VERSION` in `sw.js` with every change to `index.html`.

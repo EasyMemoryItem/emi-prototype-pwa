@@ -48,12 +48,11 @@ Four claims a generic aviation study app could not truthfully copy:
 
 **Technical shape:**
 
-- Static PWA, no build step, no package manager. `index.html` is the deployable app and **the authoritative artifact**. `EMI Prototype v2.dc.html` is the Claude Design compiler source (`<x-dc>`, `sc-if`/`sc-for`, `{{ }}` bindings) rendered by `support.js`.
-- **`.dc.html` is a generated export, not a second editable copy.** It drifted badly once — untouched from 2026-07-21 while `index.html` took ~20 commits, ending up with a different system radius, ink ramp, and no `:root` token block. It was resynced from `index.html` on 2026-08-11 and the two now share an identical body. Regenerate it rather than hand-mirroring; the procedure is in the README's Editing section. The device bezel (`ios-frame.jsx`) is gone from both — the app uses a full-screen responsive shell.
+- Static PWA, no build step, no package manager. `index.html` is the deployable app and **the sole authoritative artifact** — it carries the Claude Design compiler markup (`<x-dc>`, `sc-if`/`sc-for`, `{{ }}` bindings) rendered by `support.js`, the logic block, and the PWA layer.
+- **There is exactly one copy of the app, and no second place to edit.** A Claude Design export (`EMI Prototype v2.dc.html`) used to sit alongside it and drifted badly — untouched from 2026-07-21 while `index.html` took ~20 commits, ending up with a different system radius, ink ramp, and no `:root` token block, at which point the stale file was mistaken for the design authority. It was deleted on 2026-08-11 along with the truncated `EMI Prototype v2 (standalone).html`. Generate an export on demand if Claude Design is ever needed again; never commit a second copy. The device bezel (`ios-frame.jsx`) is likewise gone — the app uses a full-screen responsive shell.
 - **Component kit: HeroUI.** The real build targets HeroUI. `heroui.theme.ts` at the project root is the normative theme override derived from the app's own tokens. The prototype itself does not consume it — `index.html` declares `:root` custom properties as intent but hardcodes literals (exactly one `var()` call in the file).
-- `ios-frame.jsx` supplies the `IOSDevice` bezel and status bar for the desktop preview.
+- `ios-frame.jsx` supplies the `IOSDevice` bezel and status bar for the desktop preview. Nothing imports it any more; kept for reference.
 - Changing `index.html`, an icon, or `vendor/` requires bumping `CACHE_VERSION` in `sw.js`; new precached files go in `PRECACHE`.
-- `EMI Prototype v2 (standalone).html` is a truncated dead stub — ignore it.
 - Deployed as static files (GitHub Pages via a workflow in `.github/`), installed via Add to Home Screen / Install prompt.
 
 **Status — deliberately a demo prototype.** The purpose is to sell and validate the concept; the design-compiler markup is expected to be rewritten in a real stack later. Visual fidelity matters more than architecture. Shown to: airlines and ATOs as prospective customers, investors, and pilots for feedback. It therefore has to read as a shipping product a crew would trust, communicate the concept fast, and survive scrutiny of its content realism.

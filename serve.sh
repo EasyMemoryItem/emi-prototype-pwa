@@ -4,6 +4,5 @@
 cd "$(dirname "$0")"
 PORT="${1:-8000}"
 echo "EMI PWA at:"
-echo "  http://localhost:$PORT/                                    (installable PWA)"
-echo "  http://localhost:$PORT/EMI%20Prototype%20v2.dc.html        (editable source)"
+echo "  http://localhost:$PORT/   (installable PWA)"
 exec python3 -m http.server "$PORT"
