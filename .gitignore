@@ -1,1 +1,5 @@
 .DS_Store
+
+# Impeccable live mode: helper config, session journal and root manifest.
+# Machine-local scratch — regenerated on the next `live.mjs` boot.
+.impeccable/live/
