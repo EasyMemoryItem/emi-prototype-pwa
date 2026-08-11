@@ -14,14 +14,14 @@ nothing is fetched from a CDN. A service worker precaches the whole app shell.
 
 | File | What it is |
 | --- | --- |
-| `index.html` | **The PWA.** Same markup as the `.dc.html` source + a local `window.__resources` map (points the runtime at `vendor/` instead of unpkg), local font, PWA `<head>` tags, and service-worker registration. Deploy and install this. |
+| `index.html` | **The PWA, and the source of truth.** Edit here. Adds to the shared body: a local `window.__resources` map (points the runtime at `vendor/` instead of unpkg), local font, PWA `<head>` tags, the app-height fix, service-worker registration, and the install banner. Deploy and install this. |
 | `manifest.webmanifest` | Web app manifest — name, icons, colours, `display: standalone`. |
 | `sw.js` | Service worker. Precaches the app shell (listed in `PRECACHE`) and serves cache-first, so the installed app works offline from first launch. |
 | `icons/` | App icons — the official EMI logo from easymemoryitem.com, used unmodified. `logo-1466.png` is the untouched original; every other file (`favicon-32`, `icon-192`, `icon-512`, `logo`, `apple-touch-icon`) is a straight downscale of it, no cropping or recolouring. |
 | `vendor/` | Local copies of `react` / `react-dom` / `@babel/standalone` (18.3.1 / 7.29.0) and the Inter font (`inter.css` + `fonts/*.woff2`). Makes the app CDN-free and offline-capable. |
-| `EMI Prototype v2.dc.html` | **Editable source.** Claude Design compiler format (`<x-dc>`, `sc-if`/`sc-for`, `{{ }}` bindings) rendered by `support.js`. Edit here, then re-apply changes to `index.html`. |
+| `EMI Prototype v2.dc.html` | **Export for Claude Design**, regenerated from `index.html` — not hand-edited. Claude Design compiler format (`<x-dc>`, `sc-if`/`sc-for`, `{{ }}` bindings) rendered by `support.js`. Identical body to `index.html`; differs only in that it loads Inter from Google Fonts (Claude Design has no `vendor/`) and omits every PWA layer. |
 | `support.js` | Design-compiler runtime. Parses the markup and renders it; resolves CDN deps through `window.__resources` when present. |
-| `ios-frame.jsx` | `IOSDevice` bezel/status-bar component (imported via `<x-import>`). |
+| `ios-frame.jsx` | `IOSDevice` bezel/status-bar component. **No longer used** — the app moved to a full-screen responsive shell (`.emi-app`) instead of a simulated device, so nothing imports it. Kept for reference. |
 | `EMI Prototype v2 (standalone).html` | Old single-file export — **truncated at 256 KB and does not render**. Kept only as a stub; ignore it. |
 
 ## Run it
@@ -48,10 +48,20 @@ prompt (Android Chrome). After the first load it runs offline.
 
 ## Editing
 
-Edit the markup and the `<script data-dc-script>` logic block inside
-`EMI Prototype v2.dc.html`, then mirror the change into `index.html` (the two
-share the same body; `index.html` only adds the PWA/vendor wiring in `<head>`
-and a SW-registration script before `</body>`). `support.js` and `ios-frame.jsx`
-rarely need changes.
+**Edit `index.html`.** It is the deployed app and the source of truth — the
+markup and the `<script data-dc-script>` logic block both live there. Bump
+`CACHE_VERSION` in `sw.js` with every change. `support.js` rarely needs changes.
 
-To push edits back to the Claude Design project, use the `/design-sync` flow.
+`EMI Prototype v2.dc.html` is a **generated export**, not a second place to
+edit. Regenerate it from `index.html` by taking, in order: the `.dc.html` head
+(support.js + thumbnail template), `<body><x-dc><helmet>`, the Google-Fonts
+links, `index.html`'s `<style>` block, `</helmet>`, `index.html`'s markup from
+`<div class="emi-app">` to its `</x-dc>`, and the `data-dc-script` block —
+dropping every PWA layer (manifest and icon tags, `window.__resources`, the
+`--app-h` script, SW registration, install banner). Then push it to the Claude
+Design project with the `/design-sync` flow.
+
+> The two files drifted badly once before: `.dc.html` went un-updated from
+> 2026-07-21 while `index.html` took ~20 commits, and their design values
+> diverged (16px vs 14px system radius, among others). Regenerate rather than
+> hand-mirror, or it will happen again.
