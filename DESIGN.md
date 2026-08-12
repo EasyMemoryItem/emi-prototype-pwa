@@ -232,6 +232,16 @@ A cool, low-saturation slate-and-white field with one authoritative blue and a t
 
 **The Earned Colour Rule.** OK, Caution and Alert are readouts of real state — a checklist completed, a proficiency band, an answer graded. Never use a semantic colour to categorise, to decorate, or to add variety to a list.
 
+**The QRH Tab Exception.** The one sanctioned exception to the rule above. A printed quick-reference handbook colour-codes its tabs — Normal, Abnormal, Emergency — and pilots already navigate by that coding. The five Flight category tiles reproduce it, using the `--qrh-*` token family rather than the semantic palette, so a reader recognises the category before reading the label.
+
+The exception is deliberately narrow, and its boundary is what keeps it from swallowing the rule:
+
+- It applies to the five Flight category tiles and nothing else. A list row, chip, badge or icon tile does not get a QRH fill.
+- `--qrh-*` never encodes state. A tile is amber because it is the Abnormal section, not because something needs attention. Anything reporting *progress* — a phase dot, a completion count, a proficiency band — uses `--ok` / `--caution` / `--alert`, and the two families never appear in the same component.
+- The blues (`--qrh-lim`, `--qrh-sop`) are tab stock, not Brand, and do not imply interactivity. The One Blue Rule still governs `#1466D6`.
+
+A second screen wanting category colour is a signal to re-examine the exception, not to extend it.
+
 **The Two Greens Rule.** `#17A673` is the *state* green: a control, a completed checklist, a correct answer. `#37A56A` is the *band* green: a filled region in a chart, bar or heat map. They are not interchangeable, and a screen showing both is correct as long as each is in its own role.
 
 **The Flat Field Rule.** `#EEF1F4` is never gradient-filled, and it is the page background rather than white. Floating footers mask to that exact value; any gradient behind them renders as a visible band. A UI kit that assumes a white `background` must be overridden, not accommodated.
