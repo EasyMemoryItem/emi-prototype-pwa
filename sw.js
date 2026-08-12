@@ -3,9 +3,12 @@
  * with React/ReactDOM/Babel and the Inter font vendored locally so nothing is
  * fetched from a CDN. We precache the whole app shell and serve cache-first,
  * which makes the installed PWA fully offline-capable from the first launch.
- * Bump CACHE_VERSION whenever any precached file changes to force a refresh.
+ * CACHE_VERSION is stamped from the commit SHA by the Pages deploy workflow, so
+ * every push to main invalidates the old cache automatically. The literal below
+ * is only what a local checkout serves; editing it by hand changes nothing in
+ * production. New precached files still have to be added to PRECACHE by hand.
  */
-const CACHE_VERSION = 'emi-v17';
+const CACHE_VERSION = 'emi-v16';
 const IS_LOCAL = self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 const PRECACHE = [
   './',

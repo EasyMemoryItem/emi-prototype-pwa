@@ -40,15 +40,17 @@ Cloudflare Pages. They serve over HTTPS, which is all a PWA needs. On the phone,
 open the URL and use **Add to Home Screen** (iOS Safari) or the **Install**
 prompt (Android Chrome). After the first load it runs offline.
 
-> When you change `index.html`, an icon, or anything in `vendor/`, bump
-> `CACHE_VERSION` in `sw.js` so installed clients pick up the new version.
-> Add any new precached file to the `PRECACHE` list in `sw.js`.
+> The Pages workflow stamps `CACHE_VERSION` in `sw.js` from the commit SHA on
+> every push to `main`, so installed clients pick up a new version by
+> themselves — there is nothing to bump by hand. On any other host, do that
+> stamping yourself or edit the literal. Add any new precached file to the
+> `PRECACHE` list in `sw.js`; that part is not automatic.
 
 ## Editing
 
 **Edit `index.html`.** It is the deployed app and the only copy — the markup and
-the `<script data-dc-script>` logic block both live there. Bump `CACHE_VERSION`
-in `sw.js` with every change. `support.js` rarely needs changes.
+the `<script data-dc-script>` logic block both live there. `support.js` rarely
+needs changes.
 
 > There used to be a second copy, `EMI Prototype v2.dc.html`, kept for pushing
 > the prototype back into Claude Design. It drifted badly — un-updated from
