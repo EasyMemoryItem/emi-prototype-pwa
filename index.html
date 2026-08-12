@@ -973,7 +973,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   </div>
   <div class="emi-side-list">
     <sc-for list="{{ sideChecklists }}" as="sc" hint-placeholder-count="8">
-      <div onClick="{{ sc.onOpen }}" style="padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ sc.rowBg }};box-shadow:{{ sc.rowShadow }};transition:background 0.18s" style-hover="background:#EFF3F7">
+      <div onClick="{{ sc.onOpen }}" style="padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ sc.rowBg }};box-shadow:{{ sc.rowShadow }};transition:background 0.18s" style-hover="background:{{ sc.rowHoverBg }}">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ sc.dotBg }}"></span>
           <span style="flex:1;min-width:0;font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ sc.rowWeight }};color:{{ sc.labelColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sc.label }}</span>
@@ -1101,7 +1101,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
   </div>
   <div class="emi-side-list">
     <sc-for list="{{ sideChecklists }}" as="sc" hint-placeholder-count="8">
-      <div onClick="{{ sc.onOpen }}" style="padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ sc.rowBg }};box-shadow:{{ sc.rowShadow }};transition:background 0.18s" style-hover="background:#EFF3F7">
+      <div onClick="{{ sc.onOpen }}" style="padding:8px 12px;border-radius:16px;cursor:pointer;background:{{ sc.rowBg }};box-shadow:{{ sc.rowShadow }};transition:background 0.18s" style-hover="background:{{ sc.rowHoverBg }}">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ sc.dotBg }}"></span>
           <span style="flex:1;min-width:0;font-family:'Inter',sans-serif;font-size:14px;font-weight:{{ sc.rowWeight }};color:{{ sc.labelColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sc.label }}</span>
@@ -1998,19 +1998,19 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
     <img src="icons/logo.png" alt="" style="width:34px;height:34px;flex:none;display:block;filter:drop-shadow(0 10px 20px rgba(14,78,168,0.55))">
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#131A21;line-height:1.15;letter-spacing:0.01em">EMI</span>
   </div>
-  <div onClick="{{ goHome }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbHome }};color:{{ rtHome }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goHome }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbHome }};color:{{ rtHome }};transition:background 0.18s" style-hover="background:{{ rhHome }}">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riHome }};color:{{ rcHome }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10"></path></svg></span>
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwHome }}">Start</span>
   </div>
-  <div onClick="{{ goFlight }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbFlight }};color:{{ rtFlight }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goFlight }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbFlight }};color:{{ rtFlight }};transition:background 0.18s" style-hover="background:{{ rhFlight }}">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riFlight }};color:{{ rcFlight }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l20-6-6 20-4-8-8-4-2-2z"></path></svg></span>
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwFlight }}">Flight</span>
   </div>
-  <div onClick="{{ goLearn }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbLearn }};color:{{ rtLearn }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goLearn }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbLearn }};color:{{ rtLearn }};transition:background 0.18s" style-hover="background:{{ rhLearn }}">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riLearn }};color:{{ rcLearn }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h11v16H6a2 2 0 00-2 2V5z"></path><path d="M17 3v16"></path></svg></span>
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwLearn }}">Learn</span>
   </div>
-  <div onClick="{{ goSearch }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbSearch }};color:{{ rtSearch }};transition:background 0.18s" style-hover="background:#EFF3F7">
+  <div onClick="{{ goSearch }}" class="emi-rrow" style="display:flex;align-items:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;background:{{ rbSearch }};color:{{ rtSearch }};transition:background 0.18s" style-hover="background:{{ rhSearch }}">
     <span style="width:32px;height:32px;flex:none;border-radius:12px;background:{{ riSearch }};color:{{ rcSearch }};display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></span>
     <span class="emi-rl" style="font-family:'Inter',sans-serif;font-weight:{{ rwSearch }}">Search</span>
   </div>
@@ -2532,6 +2532,7 @@ class Component extends DCLogic {
     const rIb = (t) => rOn(t) ? 'rgba(255,255,255,0.22)' : '#EFF3F7';
     const rIc = (t) => rOn(t) ? '#fff' : '#5A6672';
     const rWt = (t) => rOn(t) ? '600' : '600';
+    const rHover = (t) => (t === 'search' ? s.searchOpen : rOn(t)) ? '#0E4EA8' : '#EFF3F7';
 
     const hangarData = [['A320 (CFM56-5)', 'GENERAL']];
     const hangar = hangarData.map(([name, sub], i) => {
@@ -2624,6 +2625,8 @@ class Component extends DCLogic {
     });
     // Tablet sidebar: the same phase list as the chip rail, but as full rows with
     // progress. Active row is a solid brand pill; the rest stay flat.
+    // Hover must not paint a light wash over the selected row — style-hover sets
+    // inline background and would leave white label/count on #EFF3F7 (invisible).
     const sideChecklists = phasesArr.map((p, i) => {
       const cur = i === s.phaseIdx, st = phaseStat(p);
       const dotCol = st.key === 'green' ? '#17A673' : st.key === 'yellow' ? '#EBB236' : st.key === 'red' ? '#E4483B' : '#C2C9D1';
@@ -2632,6 +2635,7 @@ class Component extends DCLogic {
         barPct: Math.round(st.res / st.total * 100) + '%',
         onOpen: () => this.nav(s.phasesOrigin === 'learn' ? 'lchecklist' : 'checklist', { phaseIdx: i }),
         rowBg: cur ? '#1466D6' : 'transparent',
+        rowHoverBg: cur ? '#0E4EA8' : '#EFF3F7',
         rowShadow: cur ? '0 10px 22px -14px rgba(20,102,214,0.95)' : 'none',
         labelColor: cur ? '#fff' : '#131A21',
         countColor: cur ? 'rgba(255,255,255,0.82)' : '#8A97A4',
@@ -2971,6 +2975,7 @@ class Component extends DCLogic {
       wHome: twt('home'), wFlight: twt('flight'), wLearn: twt('learn'),
       bHome: tbg('home'), bFlight: tbg('flight'), bLearn: tbg('learn'),
       rbHome: rBg('home'), rbFlight: rBg('flight'), rbLearn: rBg('learn'), rbSearch: s.searchOpen ? sky : 'transparent',
+      rhHome: rHover('home'), rhFlight: rHover('flight'), rhLearn: rHover('learn'), rhSearch: rHover('search'),
       rtHome: rTx('home'), rtFlight: rTx('flight'), rtLearn: rTx('learn'), rtSearch: s.searchOpen ? '#fff' : '#131A21',
       riHome: rIb('home'), riFlight: rIb('flight'), riLearn: rIb('learn'), riSearch: s.searchOpen ? 'rgba(255,255,255,0.22)' : '#EFF3F7',
       rcHome: rIc('home'), rcFlight: rIc('flight'), rcLearn: rIc('learn'), rcSearch: s.searchOpen ? '#fff' : '#5A6672',
