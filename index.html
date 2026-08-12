@@ -243,7 +243,7 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
      surplus into two bands of empty canvas and left the title sharing an edge
      with nothing, so switching between a capped and an uncapped screen slid the
      whole column sideways. */
-  [data-screen-label]:has(>.emi-narrow){max-width:772px;margin-left:0;margin-right:auto}
+  [data-screen-label]:has(>.emi-narrow){margin-left:0;margin-right:0}
   /* Rows between the header and the scroll body — filter chips, a subtitle —
      are matched by neither gutter selector and kept their phone 20px while
      everything above and below them moved to 32px. */
@@ -253,7 +253,6 @@ a{color:#1466D6}a:hover{color:#0E4EA8}
      which is the correct reading order for a limitation table. */
   .emi-rows2{columns:2;column-gap:0;column-rule:1px solid #ECEFF3}
   .emi-rows2>.emi-hairline{break-inside:avoid}
-  .emi-clmain .emi-narrow{max-width:760px}
   /* HeroUI-flavoured surface pass: softer, higher-radius cards on the big canvas */
   .emi-card{border-radius:20px!important;box-shadow:0 10px 26px -16px rgba(19,26,33,0.22)!important}
   .emi-title{width:auto!important;height:auto!important}
